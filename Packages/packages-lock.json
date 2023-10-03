@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.github-glitchenzo.nugetforunity": {
+      "version": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "c58092e494c778fba5a9f2c45e6e6558918464ac"
+    },
     "com.unity.collab-proxy": {
       "version": "2.0.7",
       "depth": 0,
@@ -56,6 +63,13 @@
     "com.unity.ide.vscode": {
       "version": "1.2.5",
       "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
