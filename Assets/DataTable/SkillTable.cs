@@ -1,17 +1,15 @@
-﻿using CsvHelper.Configuration;
-using CsvHelper;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
-public class StringTable : DataTable
+public class SkillTable : DataTable
 {
-    private string path = "Tables/StringTable.csv";
+    private string path = "Tables/SkillTable.csv";
+
     public class Data
     {
         public string ID { get; set; }
@@ -19,8 +17,7 @@ public class StringTable : DataTable
     }
     protected Dictionary<string, string> dic = new Dictionary<string, string>();
 
-
-    public StringTable()
+    public SkillTable()
     {
         filePath = Path.Combine(Application.streamingAssetsPath, path);
         Load();
@@ -62,4 +59,3 @@ public class StringTable : DataTable
         return dic[id];
     }
 }
-
