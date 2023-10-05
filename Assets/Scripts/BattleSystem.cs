@@ -14,7 +14,7 @@ public enum BattleState
     LOSE
 }
 
-public enum BattleAttribute
+public enum TempSkillAttribute
 {
     Rock,
     Scissors,
@@ -30,7 +30,7 @@ public enum BattleResult
 
 public class TempSkill
 {
-    public BattleAttribute attribute;
+    public TempSkillAttribute attribute;
     public string name;
     public int damage;
 }
@@ -64,16 +64,16 @@ public class BattleSystem : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //Test
         Debug.Log("Awake");
-        tempSkills.Add(new TempSkill() { attribute = BattleAttribute.Rock, damage = 10, name = "SKILL_A" });
-        tempSkills.Add(new TempSkill() { attribute = BattleAttribute.Scissors, damage = 20, name = "SKILL_B" });
-        tempSkills.Add(new TempSkill() { attribute = BattleAttribute.Paper, damage = 30, name = "SKILL_C" });
+        tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Rock, damage = 10, name = "SKILL_A" });
+        tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Scissors, damage = 20, name = "SKILL_B" });
+        tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Paper, damage = 30, name = "SKILL_C" });
     }
 
     private void Start()
     {
         Debug.Log("Start");
+        Debug.Log("Press Alpha1");
     }
 
     private void Update()
@@ -88,10 +88,11 @@ public class BattleSystem : MonoBehaviour
     private void SetupBattle()
     {
         var enemyGO = Instantiate(enemyPrefab);
+        enemyGO.transform.position = new Vector3 (0f, 0.5f, 5f);
         enemyEntity = enemyGO.GetComponent<LivingEntity>();
         enemyEntity.startingHealth = 100;
 
-        battleHUD.SetEnemy(enemyEntity);
+        battleHUD.SetEnemyHp(enemyEntity);
         battleHUD.SetSkill(tempSkills);
         battleHUD.gameObject.SetActive(true);
 
@@ -137,6 +138,7 @@ public class BattleSystem : MonoBehaviour
                 if (enemyEntity.Dead)
                 {
                     state = BattleState.WIN;
+                    Win();
                 }
                 else
                 {
@@ -154,45 +156,50 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    public void Win()
+    {
+        enemyEntity = null;
+    }
+
     public void Lose()
     {
 
     }
 
-    private BattleResult AttributeCheck(BattleAttribute targetAttribute)
+    private BattleResult AttributeCheck(TempSkillAttribute targetAttribute)
     {
         switch (playerAction.attribute)
         {
-            case BattleAttribute.Rock:
+            case TempSkillAttribute.Rock:
                 switch (targetAttribute)
                 {
-                    case BattleAttribute.Rock:
+                    case TempSkillAttribute.Rock:
                         break;
-                    case BattleAttribute.Scissors:
+                    case TempSkillAttribute.Scissors:
                         return BattleResult.WIN;
-                    case BattleAttribute.Paper:
+                    case TempSkillAttribute.Paper:
                         return BattleResult.LOSE;
                 }
                 break;
-            case BattleAttribute.Scissors:
+            case TempSkillAttribute.Scissors:
                 switch (targetAttribute)
                 {
-                    case BattleAttribute.Rock:
+                    case TempSkillAttribute.Rock:
                         return BattleResult.LOSE;
-                    case BattleAttribute.Scissors:
+                    case TempSkillAttribute.Scissors:
                         break;
-                    case BattleAttribute.Paper:
+                    case TempSkillAttribute.Paper:
                         return BattleResult.WIN;
                 }
                 break;
-            case BattleAttribute.Paper:
+            case TempSkillAttribute.Paper:
                 switch (targetAttribute)
                 {
-                    case BattleAttribute.Rock:
+                    case TempSkillAttribute.Rock:
                         return BattleResult.WIN;
-                    case BattleAttribute.Scissors:
+                    case TempSkillAttribute.Scissors:
                         return BattleResult.LOSE;
-                    case BattleAttribute.Paper:
+                    case TempSkillAttribute.Paper:
                         break;
                 }
                 break;

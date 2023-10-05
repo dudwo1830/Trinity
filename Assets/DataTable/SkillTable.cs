@@ -10,11 +10,6 @@ public class SkillTable : DataTable
 {
     private string path = "Tables/SkillTable.csv";
 
-    public class Data
-    {
-        public string ID { get; set; }
-        public string STRING { get; set; }
-    }
     protected Dictionary<string, string> dic = new Dictionary<string, string>();
 
     public SkillTable()
@@ -39,12 +34,12 @@ public class SkillTable : DataTable
         using (TextReader reader = new StringReader(csvStr.text))
         {
             var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture));
-            var records = csv.GetRecords<Data>();
+            var records = csv.GetRecords<SkillData>();
 
             dic.Clear();
             foreach (var record in records)
             {
-                dic.Add(record.ID, record.STRING);
+                //dic.Add(record.ID, record.STRING);
             }
         }
 

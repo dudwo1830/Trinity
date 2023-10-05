@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class BattleHUD : MonoBehaviour
 {
-    public Slider playerHealthSlider;
     public Slider enemyHealthSlider;
 
     private Button[] buttons;
@@ -16,7 +15,7 @@ public class BattleHUD : MonoBehaviour
         buttons = gameObject.GetComponents<Button>();
     }
 
-    public void SetEnemy(LivingEntity enemy)
+    public void SetEnemyHp(LivingEntity enemy)
     {
         enemyHealthSlider.minValue = 0f;
         enemyHealthSlider.maxValue = enemy.startingHealth;
