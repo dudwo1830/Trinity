@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class PlayerHealth : LivingEntity
 {
-    public Image image;
-    Color startColor = Color.clear;
-    Color endColor = Color.red;
     private Coroutine hitEffect;
 
     public Slider healthSlider;
@@ -29,10 +26,6 @@ public class PlayerHealth : LivingEntity
     {
         base.OnEnable();
 
-        image.enabled = false;
-        image.color = startColor;
-        endColor.a = 0.3f;
-
         healthSlider.gameObject.SetActive(true);
         healthSlider.minValue = 0f;
         healthSlider.maxValue = startingHealth;
@@ -53,7 +46,6 @@ public class PlayerHealth : LivingEntity
     public override void OnHeal(float heal)
     {
         base.OnHeal(heal);
-
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
@@ -68,7 +60,7 @@ public class PlayerHealth : LivingEntity
         {
             StopCoroutine(hitEffect);
         }
-        hitEffect = StartCoroutine(HitEffect(1f));
+        //hitEffect = StartCoroutine(HitEffect(1f));
     }
 
     public override void Die()
@@ -81,22 +73,22 @@ public class PlayerHealth : LivingEntity
         playerMovement.enabled = false;
     }
 
-    IEnumerator HitEffect(float duration)
-    {
-        image.enabled = true;
-        float time = 0f;
-        image.color = startColor;
-        while (time < duration)
-        {
-            time += Time.deltaTime * 5f;
-            image.color = Color.Lerp(endColor, startColor, time / duration);
-            yield return null;
-        }
-        image.enabled = false;
-        image.color = startColor;
+    //IEnumerator HitEffect(float duration)
+    //{
+    //    image.enabled = true;
+    //    float time = 0f;
+    //    image.color = startColor;
+    //    while (time < duration)
+    //    {
+    //        time += Time.deltaTime * 5f;
+    //        image.color = Color.Lerp(endColor, startColor, time / duration);
+    //        yield return null;
+    //    }
+    //    image.enabled = false;
+    //    image.color = startColor;
 
-        hitEffect = null;
-    }
+    //    hitEffect = null;
+    //}
 
     public void RestartLevel()
     {

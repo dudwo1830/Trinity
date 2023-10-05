@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
-        playerAnimator = null;// GetComponent<Animator>();
 
         worldCam = Camera.main;
     }

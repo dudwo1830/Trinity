@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class Enemy : LivingEntity
 {
-    public Slider healthSlider;
-
     public LayerMask targetMask;
     private LivingEntity targetEntity;
 
@@ -37,11 +35,6 @@ public class Enemy : LivingEntity
         enemyAnimator = null; //GetComponent<Animator>();
         enemyAudioSource = GetComponent<AudioSource>();
         enemyRenderer = GetComponent<Renderer>();
-
-        healthSlider.gameObject.SetActive(true);
-        healthSlider.minValue = 0f;
-        healthSlider.maxValue = startingHealth;
-        healthSlider.value = Health;
     }
     public void Setup(float health, float damage, float speed, float attackRate)
     {
@@ -57,8 +50,6 @@ public class Enemy : LivingEntity
 
     private void Update()
     {
-        healthSlider.value = Health;
-
         if (enemyAnimator != null)
         {
             enemyAnimator.SetBool("HasTarget", HasTarget);
@@ -99,7 +90,6 @@ public class Enemy : LivingEntity
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.OnDamage(damage, hitPoint, hitNormal);
-        healthSlider.value = Health;
     }
 
     public override void Die()
