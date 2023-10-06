@@ -5,12 +5,9 @@ using UnityEngine.UI;
 
 public class Enemy : LivingEntity
 {
-    public LayerMask targetMask;
-    private LivingEntity targetEntity;
+    public Slider healthSlider;
 
-    private NavMeshAgent pathFinder;
-
-    //public ParticleSystem hitEffect;
+    public ParticleSystem hitEffect;
     public AudioClip deathClip;
     public AudioClip hitClip;
 
@@ -21,18 +18,9 @@ public class Enemy : LivingEntity
     private float damage = 20f;
     private float lastAttackTime;
 
-    private bool HasTarget
-    {
-        get
-        {
-            return targetEntity != null && !targetEntity.Dead;
-        }
-    }
-
     private void Awake()
     {
-        pathFinder = null; //GetComponent<NavMeshAgent>();
-        enemyAnimator = null; //GetComponent<Animator>();
+        enemyAnimator = GetComponent<Animator>();
         enemyAudioSource = GetComponent<AudioSource>();
         enemyRenderer = GetComponent<Renderer>();
     }
@@ -40,72 +28,35 @@ public class Enemy : LivingEntity
     {
         startingHealth = health;
         this.damage = damage;
+
+        healthSlider.minValue = 0f;
+        healthSlider.maxValue = startingHealth;
+        healthSlider.value = Health;
         //pathFinder.speed = speed;
     }
 
     private void Start()
     {
-        //StartCoroutine(UpdatePath());
+
     }
 
     private void Update()
     {
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetBool("HasTarget", HasTarget);
-        }
-    }
 
-    private IEnumerator UpdatePath()
-    {
-        float updatePathInterval = 0.25f;
-        float findRadius = 50f;
-
-        while (!Dead)
-        {
-            if (HasTarget)
-            {
-                pathFinder.isStopped = false;
-                pathFinder.SetDestination(targetEntity.transform.position);
-            }
-            else
-            {
-                pathFinder.isStopped = true;
-                Collider[] colliders = Physics.OverlapSphere(transform.position, findRadius, targetMask);
-                for (int i = 0; i < colliders.Length; i++)
-                {
-                    var livingEntity = colliders[i].GetComponent<LivingEntity>();
-                    if (livingEntity != null && !livingEntity.Dead)
-                    {
-                        targetEntity = livingEntity;
-                        break;
-                    }
-                }
-            }
-
-            yield return new WaitForSeconds(updatePathInterval);
-        }
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.OnDamage(damage, hitPoint, hitNormal);
+        healthSlider.value = Health;
     }
 
     public override void Die()
     {
+        Debug.Log("Enemy Die");
         base.Die();
-
-        var colliders = GetComponents<Collider>();
-        foreach (var collider in colliders)
-        {
-            collider.enabled = false;
-        }
-
-        pathFinder.isStopped = true;
-        pathFinder.enabled = false;
-
-        enemyAnimator.SetTrigger("Die");
-        enemyAudioSource.PlayOneShot(deathClip);
+        
+        enemyAnimator?.SetTrigger("Die");
+        enemyAudioSource?.PlayOneShot(deathClip);
     }
 }

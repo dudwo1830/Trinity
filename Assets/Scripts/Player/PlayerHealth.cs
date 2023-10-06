@@ -69,7 +69,7 @@ public class PlayerHealth : LivingEntity
 
         playerAudioSource.PlayOneShot(deathClip);
 
-        playerAnimator.SetTrigger("Die");
+        //playerAnimator.SetTrigger("Die");
         playerMovement.enabled = false;
     }
 

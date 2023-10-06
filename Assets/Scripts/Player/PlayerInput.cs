@@ -10,8 +10,6 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        //Todo: GameOver
-
         vertical = Input.GetAxis(verticalAxisName);
         horizontal = Input.GetAxis(horizontalAxisName);
     }

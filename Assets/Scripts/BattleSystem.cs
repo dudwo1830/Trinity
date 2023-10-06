@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build.Content;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum BattleState
 {
@@ -39,12 +40,13 @@ public class BattleSystem : MonoBehaviour
 {
     public static BattleSystem Instance { get; set; }
 
-    public GameObject enemyPrefab;
+    public GameObject playerUI;
+
+    public List<Enemy> enemyList = new List<Enemy>();
+    private Enemy currentEnemy;
 
     public LivingEntity playerEntity;
-    private LivingEntity enemyEntity;
 
-    public BattleHUD battleHUD;
     public BattleState state = BattleState.NONE;
 
     //Test
@@ -73,6 +75,7 @@ public class BattleSystem : MonoBehaviour
     private void Start()
     {
         Debug.Log("Start");
+        playerUI.SetActive(false);
         Debug.Log("Press Alpha1");
     }
 
@@ -87,14 +90,12 @@ public class BattleSystem : MonoBehaviour
 
     private void SetupBattle()
     {
-        var enemyGO = Instantiate(enemyPrefab);
-        enemyGO.transform.position = new Vector3 (0f, 0.5f, 5f);
-        enemyEntity = enemyGO.GetComponent<LivingEntity>();
-        enemyEntity.startingHealth = 100;
+        currentEnemy = Instantiate(enemyList[0]);
+        currentEnemy.transform.position = new Vector3 (0f, 0.5f, 5f);
+        currentEnemy.Setup(100, 0, 0, 0);
 
-        battleHUD.SetEnemyHp(enemyEntity);
-        battleHUD.SetSkill(tempSkills);
-        battleHUD.gameObject.SetActive(true);
+        currentEnemy.gameObject.SetActive(true);
+        playerUI.SetActive(true);
 
         Debug.Log("SetupBattle");
         state = BattleState.ENEMYTURN;
@@ -115,6 +116,7 @@ public class BattleSystem : MonoBehaviour
 
     public void EnemyTurn()
     {
+        Debug.Log("--------------Select Phase--------------");
         enemyAction = tempSkills[Random.Range(0, tempSkills.Count)];
         Debug.Log($"EnemyTurn: Enemy is {enemyAction.name}");
         state = BattleState.PLAYERTURN;
@@ -132,10 +134,13 @@ public class BattleSystem : MonoBehaviour
         switch (AttributeCheck(enemyAction.attribute))
         {
             case BattleResult.DRAW:
+                Debug.Log("== RESULT: DRAW ==");
+                EnemyTurn();
                 break;
             case BattleResult.WIN:
-                enemyEntity.OnDamage(playerAction.damage, Vector3.zero, Vector3.zero);
-                if (enemyEntity.Dead)
+                Debug.Log("== RESULT: PLAYER ATTACK ==");
+                currentEnemy.OnDamage(playerAction.damage, Vector3.zero, Vector3.zero);
+                if (currentEnemy.Dead)
                 {
                     state = BattleState.WIN;
                     Win();
@@ -143,14 +148,21 @@ public class BattleSystem : MonoBehaviour
                 else
                 {
                     state = BattleState.ENEMYTURN;
+                    EnemyTurn();
                 }
                 break;
             case BattleResult.LOSE:
+                Debug.Log("== RESULT: ENEMY ATTACK ==");
                 playerEntity.OnDamage(enemyAction.damage, Vector3.zero, Vector3.zero);
                 if (playerEntity.Dead)
                 {
                     state = BattleState.LOSE;
                     Lose();
+                }
+                else
+                {
+                    state = BattleState.ENEMYTURN;
+                    EnemyTurn();
                 }
                 break;
         }
@@ -158,12 +170,13 @@ public class BattleSystem : MonoBehaviour
 
     public void Win()
     {
-        enemyEntity = null;
+        Destroy(currentEnemy.gameObject);
+        Debug.Log("Player Win");
     }
 
     public void Lose()
     {
-
+        Debug.Log("Player Lose");
     }
 
     private BattleResult AttributeCheck(TempSkillAttribute targetAttribute)
