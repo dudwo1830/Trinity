@@ -240,8 +240,8 @@ GameObject:
   - component: {fileID: 609255289537435260}
   - component: {fileID: 4560959868956970357}
   - component: {fileID: 6608292300061173801}
-  m_Layer: 0
-  m_Name: Action
+  m_Layer: 5
+  m_Name: ActionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public enum BattleState
@@ -45,6 +45,8 @@ public class BattleSystem : MonoBehaviour
 
     public List<Enemy> enemyList = new List<Enemy>();
     private Enemy currentEnemy;
+    public TextMeshProUGUI enemyActionText;
+    public bool qteResult = false;
 
     public BattleState state = BattleState.NONE;
 
@@ -119,6 +121,7 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log("--------------Select Phase--------------");
         enemyAction = tempSkills[Random.Range(0, tempSkills.Count)];
+        enemyActionText.text = (qteResult) ? enemyAction.attribute.ToString() : string.Empty;
         Debug.Log($"EnemyTurn: Enemy is {enemyAction.name}");
         state = BattleState.PLAYERTURN;
         PlayerTurn();

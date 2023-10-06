@@ -271,7 +271,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 1
+  m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1611,6 +1611,8 @@ MonoBehaviour:
   playerEntity: {fileID: 633897855}
   enemyList:
   - {fileID: 5574862671766715473, guid: 65a093b7ab508cb40a4119ae6ff198c5, type: 3}
+  enemyActionText: {fileID: 0}
+  qteResult: 0
   state: 0
 --- !u!4 &1244917660
 Transform:
@@ -1671,12 +1673,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254241191}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00a63fea50dc55d4ab2277b55c82ed54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliderSpeed: 10
+  sliderSpeed: 1
   slider: {fileID: 1444329047}
   actionKey: 32
 --- !u!1 &1286735784
