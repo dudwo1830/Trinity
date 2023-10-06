@@ -7,12 +7,12 @@ public class PlayerMovement : MonoBehaviour
     private Animator playerAnimator;
 
     public float moveSpeed = 10f;
-    public float rotateSpeed = 180f;
     private Vector3 direction;
 
-    public LayerMask layerMask;
     private Camera worldCam;
 
+    private bool canMove = true;
+    
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -39,7 +39,6 @@ public class PlayerMovement : MonoBehaviour
             direction.Normalize();
         }
 
-
         if (playerAnimator != null)
         {
             playerAnimator.SetFloat("Move", direction.magnitude);
@@ -48,8 +47,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!canMove)
+        {
+            return;
+        }
+
         Move();
-        Rotate();
     }
 
     private void Move()
@@ -57,17 +60,17 @@ public class PlayerMovement : MonoBehaviour
         var position = playerRigidbody.position;
         position += direction * moveSpeed * Time.deltaTime;
         playerRigidbody.MovePosition(position);
-    }
 
-    private void Rotate()
-    {
-        Ray ray = worldCam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, layerMask))
+        if (playerInput.vertical > 0f || playerInput.horizontal > 0f)
         {
-            Vector3 lookPoint = hitInfo.point;
-            lookPoint.y = transform.position.y;
-            var look = lookPoint - playerRigidbody.position;
-            playerRigidbody.MoveRotation(Quaternion.LookRotation(look.normalized));
+            BattleSystem.Instance.encountChance += Random.Range(0, Time.deltaTime * 100f);
+            Debug.Log($"Encount Chance: {BattleSystem.Instance.encountChance}");
+        }
+
+        if (BattleSystem.Instance.encountChance >= 100f)
+        {
+            BattleSystem.Instance.SetupBattle();
+            canMove = false;
         }
     }
 }

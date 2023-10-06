@@ -1,9 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
-using UnityEditor.Build.Content;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum BattleState
 {
@@ -12,7 +9,8 @@ public enum BattleState
     PLAYERTURN,
     ENEMYTURN,
     WIN,
-    LOSE
+    LOSE,
+    QTE
 }
 
 public enum TempSkillAttribute
@@ -39,13 +37,14 @@ public class TempSkill
 public class BattleSystem : MonoBehaviour
 {
     public static BattleSystem Instance { get; set; }
+    public float encountChance = 0f;
 
+    public Transform playerTransform;
     public GameObject playerUI;
+    public LivingEntity playerEntity;
 
     public List<Enemy> enemyList = new List<Enemy>();
     private Enemy currentEnemy;
-
-    public LivingEntity playerEntity;
 
     public BattleState state = BattleState.NONE;
 
@@ -67,6 +66,7 @@ public class BattleSystem : MonoBehaviour
         }
 
         Debug.Log("Awake");
+        //Test
         tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Rock, damage = 10, name = "SKILL_A" });
         tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Scissors, damage = 20, name = "SKILL_B" });
         tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Paper, damage = 30, name = "SKILL_C" });
@@ -88,10 +88,12 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    private void SetupBattle()
+    public void SetupBattle()
     {
+        encountChance = 0f;
+
         currentEnemy = Instantiate(enemyList[0]);
-        currentEnemy.transform.position = new Vector3 (0f, 0.5f, 5f);
+        currentEnemy.transform.position = playerTransform.position + new Vector3 (0f, 0f, 5f);
         currentEnemy.Setup(100, 0, 0, 0);
 
         currentEnemy.gameObject.SetActive(true);
@@ -100,6 +102,11 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("SetupBattle");
         state = BattleState.ENEMYTURN;
         EnemyTurn();
+    }
+
+    IEnumerator QuickTimeEvent()
+    {
+        yield return new WaitForSeconds(1f);
     }
 
     public void OnSkillButton()
