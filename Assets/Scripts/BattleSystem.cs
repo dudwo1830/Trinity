@@ -76,7 +76,6 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log("Start");
         playerUI.SetActive(false);
-        Debug.Log("Press Alpha1");
     }
 
     private void Update()
@@ -102,11 +101,6 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("SetupBattle");
         state = BattleState.ENEMYTURN;
         EnemyTurn();
-    }
-
-    IEnumerator QuickTimeEvent()
-    {
-        yield return new WaitForSeconds(1f);
     }
 
     public void OnSkillButton()

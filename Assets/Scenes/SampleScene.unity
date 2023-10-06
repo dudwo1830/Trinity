@@ -1607,7 +1607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   encountChance: 0
   playerTransform: {fileID: 633897851}
-  playerUI: {fileID: 288626038}
+  playerUI: {fileID: 1177656112}
   playerEntity: {fileID: 633897855}
   enemyList:
   - {fileID: 5574862671766715473, guid: 65a093b7ab508cb40a4119ae6ff198c5, type: 3}

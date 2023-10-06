@@ -24,49 +24,8 @@ public class QuickTimeEvent : MonoBehaviour
     {
     }
 
-    IEnumerator Move()
+    public bool GetQuickTimeEvent()
     {
-        while (true)
-        {
-            if (isFlip)
-            {
-                slider.value += Time.deltaTime * sliderSpeed;
-                if (slider.value >= slider.maxValue)
-                {
-                    isFlip = true;
-                }
-            }
-            else
-            {
-                slider.value += Time.deltaTime * -sliderSpeed;
-                if (slider.value <= slider.minValue)
-                {
-                    isFlip = false;
-                }
-            }
-
-            if (Input.GetKeyDown(actionKey))
-            {
-                isSuccess = slider.value > 0.4f && slider.value < 0.6f;
-                yield break;
-            }
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            slider.gameObject.SetActive(true);
-            slider.value = 0f;
-            isStart = true;
-        }
-
-        if (!isStart)
-        {
-            return;
-        }
-
         if (!isFlip)
         {
             slider.value += Time.deltaTime * sliderSpeed;
@@ -88,5 +47,24 @@ public class QuickTimeEvent : MonoBehaviour
             isSuccess = slider.value > 0.4f && slider.value < 0.6f;
             isStart = false;
         }
+
+        return isSuccess;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            slider.gameObject.SetActive(true);
+            slider.value = 0f;
+            isStart = true;
+        }
+
+        if (!isStart)
+        {
+            return;
+        }
+
+
     }
 }
