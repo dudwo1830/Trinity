@@ -229,6 +229,7 @@ MonoBehaviour:
   hitEffect: {fileID: 0}
   deathClip: {fileID: 0}
   hitClip: {fileID: 0}
+  actionTextUI: {fileID: 6608292300061173801}
 --- !u!1 &8880608730857738230
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +247,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &609255289537435260
 RectTransform:
   m_ObjectHideFlags: 0

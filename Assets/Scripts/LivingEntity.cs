@@ -42,4 +42,10 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
         Dead = true;
     }
+
+    public virtual void Revive(float heal = 50f)
+    {
+        Dead = false;
+        Health = heal;
+    }
 }

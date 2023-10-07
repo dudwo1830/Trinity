@@ -11,8 +11,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Camera worldCam;
 
-    private bool canMove = true;
-    
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -47,11 +45,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!canMove)
-        {
-            return;
-        }
-
         Move();
     }
 
@@ -61,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         position += direction * moveSpeed * Time.deltaTime;
         playerRigidbody.MovePosition(position);
 
-        if (playerInput.vertical > 0f || playerInput.horizontal > 0f)
+        if (playerInput.vertical > 0f || playerInput.vertical < 0f || playerInput.horizontal > 0f || playerInput.horizontal < 0f)
         {
             BattleSystem.Instance.encountChance += Random.Range(0, Time.deltaTime * 100f);
             Debug.Log($"Encount Chance: {BattleSystem.Instance.encountChance}");
@@ -70,7 +63,6 @@ public class PlayerMovement : MonoBehaviour
         if (BattleSystem.Instance.encountChance >= 100f)
         {
             BattleSystem.Instance.SetupBattle();
-            canMove = false;
         }
     }
 }

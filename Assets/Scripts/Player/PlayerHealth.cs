@@ -37,10 +37,6 @@ public class PlayerHealth : LivingEntity
     private void Update()
     {
         healthSlider.value = Health;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnDamage(20, Vector3.zero, Vector3.zero);
-        }
     }
 
     public override void OnHeal(float heal)
@@ -71,6 +67,13 @@ public class PlayerHealth : LivingEntity
 
         //playerAnimator.SetTrigger("Die");
         playerMovement.enabled = false;
+    }
+
+    public override void Revive(float heal = 50f)
+    {
+        base.Revive(heal);
+        healthSlider.value = Health;
+        playerMovement.enabled = true; 
     }
 
     //IEnumerator HitEffect(float duration)

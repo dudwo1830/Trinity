@@ -1,3 +1,5 @@
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +14,8 @@ public class Enemy : LivingEntity
     private Animator enemyAnimator;
     private AudioSource enemyAudioSource;
     private Renderer enemyRenderer;
+
+    public TextMeshProUGUI actionTextUI;
 
     private float damage = 20f;
     private float lastAttackTime;
@@ -54,7 +58,20 @@ public class Enemy : LivingEntity
         Debug.Log("Enemy Die");
         base.Die();
         
-        enemyAnimator?.SetTrigger("Die");
-        enemyAudioSource?.PlayOneShot(deathClip);
+        //enemyAnimator.SetTrigger("Die");
+        //enemyAudioSource.PlayOneShot(deathClip);
+    }
+
+    public void SetActionText(string text)
+    {
+        if (text == string.Empty || text == null)
+        {
+            actionTextUI.gameObject.SetActive(false);
+        }
+        else
+        {
+            actionTextUI.text = text;
+            actionTextUI.gameObject.SetActive(true);
+        }
     }
 }

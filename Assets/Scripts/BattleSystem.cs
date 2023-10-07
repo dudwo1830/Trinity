@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum BattleState
@@ -40,15 +42,17 @@ public class BattleSystem : MonoBehaviour
     public float encountChance = 0f;
 
     public Transform playerTransform;
+    private PlayerMovement playerMovement;
     public GameObject playerUI;
     public LivingEntity playerEntity;
 
     public List<Enemy> enemyList = new List<Enemy>();
     private Enemy currentEnemy;
     public TextMeshProUGUI enemyActionText;
-    public bool qteResult = false;
 
     public BattleState state = BattleState.NONE;
+
+    public QuickTimeEvent qte;
 
     //Test
     List<TempSkill> tempSkills = new List<TempSkill>();
@@ -67,7 +71,8 @@ public class BattleSystem : MonoBehaviour
             Destroy(gameObject);
         }
 
-        Debug.Log("Awake");
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        playerUI.SetActive(false);
         //Test
         tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Rock, damage = 10, name = "SKILL_A" });
         tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Scissors, damage = 20, name = "SKILL_B" });
@@ -76,22 +81,30 @@ public class BattleSystem : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Start");
-        playerUI.SetActive(false);
+        Debug.Log("Start\nPress Alpha1 is Immediately Enemy Encount");
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            state = BattleState.START;
             SetupBattle();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            BattleOut();
         }
     }
 
     public void SetupBattle()
     {
+        playerMovement.enabled = false;
         encountChance = 0f;
+
+        if (currentEnemy != null)
+        {
+            Destroy(currentEnemy.gameObject);
+        }
 
         currentEnemy = Instantiate(enemyList[0]);
         currentEnemy.transform.position = playerTransform.position + new Vector3 (0f, 0f, 5f);
@@ -101,8 +114,38 @@ public class BattleSystem : MonoBehaviour
         playerUI.SetActive(true);
 
         Debug.Log("SetupBattle");
+        state = BattleState.QTE;
+        QTE();
+    }
+
+    public void QTE()
+    {
+        Debug.Log("------Start QuickTimeEvent");
+        currentEnemy.SetActionText(string.Empty);
+        StartCoroutine(CoQTE());
+    }
+    private IEnumerator CoQTE()
+    {
+        yield return StartCoroutine(qte.StartSlider());
+        Debug.Log("------END QuickTimeEvent");
         state = BattleState.ENEMYTURN;
         EnemyTurn();
+    }
+
+    public void EnemyTurn()
+    {
+        Debug.Log($"QTE Result: {qte.IsSuccess}");
+
+        enemyAction = tempSkills[Random.Range(0, tempSkills.Count)];
+
+        if (qte.IsSuccess)
+        {
+            string actionText = enemyAction.attribute.ToString();
+            currentEnemy.SetActionText(actionText);
+        }
+
+        state = BattleState.PLAYERTURN;
+        PlayerTurn();
     }
 
     public void OnSkillButton()
@@ -113,18 +156,8 @@ public class BattleSystem : MonoBehaviour
         }
 
         playerAction = tempSkills[0];
-        Debug.Log($"PlayerTurn: Player is {playerAction.name}");    
+        Debug.Log($"PlayerTurn: Player is {playerAction.name}");
         Battle();
-    }
-
-    public void EnemyTurn()
-    {
-        Debug.Log("--------------Select Phase--------------");
-        enemyAction = tempSkills[Random.Range(0, tempSkills.Count)];
-        enemyActionText.text = (qteResult) ? enemyAction.attribute.ToString() : string.Empty;
-        Debug.Log($"EnemyTurn: Enemy is {enemyAction.name}");
-        state = BattleState.PLAYERTURN;
-        PlayerTurn();
     }
 
     public void PlayerTurn()
@@ -139,7 +172,8 @@ public class BattleSystem : MonoBehaviour
         {
             case BattleResult.DRAW:
                 Debug.Log("== RESULT: DRAW ==");
-                EnemyTurn();
+                state = BattleState.QTE;
+                QTE();
                 break;
             case BattleResult.WIN:
                 Debug.Log("== RESULT: PLAYER ATTACK ==");
@@ -151,8 +185,8 @@ public class BattleSystem : MonoBehaviour
                 }
                 else
                 {
-                    state = BattleState.ENEMYTURN;
-                    EnemyTurn();
+                    state = BattleState.QTE;
+                    QTE();
                 }
                 break;
             case BattleResult.LOSE:
@@ -165,8 +199,8 @@ public class BattleSystem : MonoBehaviour
                 }
                 else
                 {
-                    state = BattleState.ENEMYTURN;
-                    EnemyTurn();
+                    state = BattleState.QTE;
+                    QTE();
                 }
                 break;
         }
@@ -174,13 +208,25 @@ public class BattleSystem : MonoBehaviour
 
     public void Win()
     {
-        Destroy(currentEnemy.gameObject);
         Debug.Log("Player Win");
+        BattleOut();
     }
 
     public void Lose()
     {
         Debug.Log("Player Lose");
+        BattleOut();
+    }
+
+    private void BattleOut()
+    {
+        Destroy(currentEnemy.gameObject);
+        playerMovement.enabled = true;
+        playerUI.SetActive(false);
+        playerEntity.Revive();
+
+        Debug.Log("End Battle");
+        state = BattleState.NONE;
     }
 
     private BattleResult AttributeCheck(TempSkillAttribute targetAttribute)
