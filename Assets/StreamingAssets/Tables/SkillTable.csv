@@ -1,0 +1,4 @@
+Id,Name,Description,Attribute,Amount,Type,Level
+1,Skill_A,{{Amount}} Damage,1,15,1,1
+2,Skill_B,{{Amount}} Damage,2,20,1,1
+3,Skill_C,{{Amount}} Damage,3,50,1,1

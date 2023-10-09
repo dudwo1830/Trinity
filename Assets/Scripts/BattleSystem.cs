@@ -15,25 +15,11 @@ public enum BattleState
     QTE
 }
 
-public enum TempSkillAttribute
-{
-    Rock,
-    Scissors,
-    Paper
-}
-
 public enum BattleResult
 {
     DRAW,
     WIN,
     LOSE
-}
-
-public class TempSkill
-{
-    public TempSkillAttribute attribute;
-    public string name;
-    public int damage;
 }
 
 public class BattleSystem : MonoBehaviour
@@ -50,14 +36,12 @@ public class BattleSystem : MonoBehaviour
     private Enemy currentEnemy;
     public TextMeshProUGUI enemyActionText;
 
-    public BattleState state = BattleState.NONE;
+    public static BattleState state = BattleState.NONE;
 
     public QuickTimeEvent qte;
 
-    //Test
-    List<TempSkill> tempSkills = new List<TempSkill>();
-    TempSkill enemyAction;
-    TempSkill playerAction;
+    public SkillData enemyAction;
+    public SkillData playerAction;
 
     private void Awake()
     {
@@ -73,14 +57,16 @@ public class BattleSystem : MonoBehaviour
 
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
         playerUI.SetActive(false);
-        //Test
-        tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Rock, damage = 10, name = "SKILL_A" });
-        tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Scissors, damage = 20, name = "SKILL_B" });
-        tempSkills.Add(new TempSkill() { attribute = TempSkillAttribute.Paper, damage = 30, name = "SKILL_C" });
     }
 
     private void Start()
     {
+        var skillList = DataTableManager.GetTable<SkillTable>().ToList();
+        foreach(var skill in skillList)
+        {
+            SkillButtonManager.Instance.CreateSkillButton(skill);
+        }
+
         Debug.Log("Start\nPress Alpha1 is Immediately Enemy Encount");
     }
 
@@ -90,7 +76,7 @@ public class BattleSystem : MonoBehaviour
         {
             SetupBattle();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             BattleOut();
         }
@@ -106,8 +92,7 @@ public class BattleSystem : MonoBehaviour
             Destroy(currentEnemy.gameObject);
         }
 
-        currentEnemy = Instantiate(enemyList[0]);
-        currentEnemy.transform.position = playerTransform.position + new Vector3 (0f, 0f, 5f);
+        currentEnemy = Instantiate(enemyList[0], playerTransform.position + new Vector3(0,0,5f), Quaternion.identity);
         currentEnemy.Setup(100, 0, 0, 0);
 
         currentEnemy.gameObject.SetActive(true);
@@ -136,11 +121,12 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log($"QTE Result: {qte.IsSuccess}");
 
-        enemyAction = tempSkills[Random.Range(0, tempSkills.Count)];
+        //enemyAction = skillList[Random.Range(0, skillList.Count)];
+        enemyAction = DataTableManager.GetTable<SkillTable>().GetRandomSkill();
 
         if (qte.IsSuccess)
         {
-            string actionText = enemyAction.attribute.ToString();
+            string actionText = enemyAction.Attribute.ToString();
             currentEnemy.SetActionText(actionText);
         }
 
@@ -148,17 +134,39 @@ public class BattleSystem : MonoBehaviour
         PlayerTurn();
     }
 
-    public void OnSkillButton()
+    public void OnSkillButton(SkillData skill)
     {
-        if (state != BattleState.PLAYERTURN)
-        {
-            return;
-        }
-
-        playerAction = tempSkills[0];
-        Debug.Log($"PlayerTurn: Player is {playerAction.name}");
+        playerAction = skill;
         Battle();
     }
+
+    //public void SkillButton1()
+    //{
+    //    if (state != BattleState.PLAYERTURN)
+    //    {
+    //        return;
+    //    }
+    //    playerAction = DataTableManager.GetTable<SkillTable>().GetSkill(1);
+    //    Battle();
+    //}
+    //public void SkillButton2()
+    //{
+    //    if (state != BattleState.PLAYERTURN)
+    //    {
+    //        return;
+    //    }
+    //    playerAction = DataTableManager.GetTable<SkillTable>().GetSkill(2);
+    //    Battle();
+    //}
+    //public void SkillButton3()
+    //{
+    //    if (state != BattleState.PLAYERTURN)
+    //    {
+    //        return;
+    //    }
+    //    playerAction = DataTableManager.GetTable<SkillTable>().GetSkill(3);
+    //    Battle();
+    //}
 
     public void PlayerTurn()
     {
@@ -167,8 +175,7 @@ public class BattleSystem : MonoBehaviour
 
     public void Battle()
     {
-        //Todo: Battle Terms
-        switch (AttributeCheck(enemyAction.attribute))
+        switch (AttributeCheck(enemyAction.Attribute))
         {
             case BattleResult.DRAW:
                 Debug.Log("== RESULT: DRAW ==");
@@ -177,7 +184,7 @@ public class BattleSystem : MonoBehaviour
                 break;
             case BattleResult.WIN:
                 Debug.Log("== RESULT: PLAYER ATTACK ==");
-                currentEnemy.OnDamage(playerAction.damage, Vector3.zero, Vector3.zero);
+                currentEnemy.OnDamage(playerAction.Amount, Vector3.zero, Vector3.zero);
                 if (currentEnemy.Dead)
                 {
                     state = BattleState.WIN;
@@ -191,7 +198,7 @@ public class BattleSystem : MonoBehaviour
                 break;
             case BattleResult.LOSE:
                 Debug.Log("== RESULT: ENEMY ATTACK ==");
-                playerEntity.OnDamage(enemyAction.damage, Vector3.zero, Vector3.zero);
+                playerEntity.OnDamage(enemyAction.Amount, Vector3.zero, Vector3.zero);
                 if (playerEntity.Dead)
                 {
                     state = BattleState.LOSE;
@@ -215,6 +222,7 @@ public class BattleSystem : MonoBehaviour
     public void Lose()
     {
         Debug.Log("Player Lose");
+        playerEntity.Revive();
         BattleOut();
     }
 
@@ -223,46 +231,45 @@ public class BattleSystem : MonoBehaviour
         Destroy(currentEnemy.gameObject);
         playerMovement.enabled = true;
         playerUI.SetActive(false);
-        playerEntity.Revive();
 
         Debug.Log("End Battle");
         state = BattleState.NONE;
     }
 
-    private BattleResult AttributeCheck(TempSkillAttribute targetAttribute)
+    private BattleResult AttributeCheck(SkillData.SkillAttribute targetAttribute)
     {
-        switch (playerAction.attribute)
+        switch (playerAction.Attribute)
         {
-            case TempSkillAttribute.Rock:
+            case SkillData.SkillAttribute.Rock:
                 switch (targetAttribute)
                 {
-                    case TempSkillAttribute.Rock:
+                    case SkillData.SkillAttribute.Rock:
                         break;
-                    case TempSkillAttribute.Scissors:
+                    case SkillData.SkillAttribute.Scissors:
                         return BattleResult.WIN;
-                    case TempSkillAttribute.Paper:
+                    case SkillData.SkillAttribute.Paper:
                         return BattleResult.LOSE;
                 }
                 break;
-            case TempSkillAttribute.Scissors:
+            case SkillData.SkillAttribute.Scissors:
                 switch (targetAttribute)
                 {
-                    case TempSkillAttribute.Rock:
+                    case SkillData.SkillAttribute.Rock:
                         return BattleResult.LOSE;
-                    case TempSkillAttribute.Scissors:
+                    case SkillData.SkillAttribute.Scissors:
                         break;
-                    case TempSkillAttribute.Paper:
+                    case SkillData.SkillAttribute.Paper:
                         return BattleResult.WIN;
                 }
                 break;
-            case TempSkillAttribute.Paper:
+            case SkillData.SkillAttribute.Paper:
                 switch (targetAttribute)
                 {
-                    case TempSkillAttribute.Rock:
+                    case SkillData.SkillAttribute.Rock:
                         return BattleResult.WIN;
-                    case TempSkillAttribute.Scissors:
+                    case SkillData.SkillAttribute.Scissors:
                         return BattleResult.LOSE;
-                    case TempSkillAttribute.Paper:
+                    case SkillData.SkillAttribute.Paper:
                         break;
                 }
                 break;

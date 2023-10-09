@@ -7,12 +7,10 @@ public class PlayerInput : MonoBehaviour
 
     public float vertical { get; private set; }
     public float horizontal { get; private set; }
-    public bool interact { get; private set; }
 
     private void Update()
     {
-        vertical = Input.GetAxis(verticalAxisName);
-        horizontal = Input.GetAxis(horizontalAxisName);
-        interact = Input.GetMouseButtonDown(0);
+        vertical = Input.GetAxisRaw(verticalAxisName);
+        horizontal = Input.GetAxisRaw(horizontalAxisName);
     }
 }

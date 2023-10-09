@@ -1,10 +1,6 @@
-﻿using CsvHelper.Configuration;
-using CsvHelper;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using UnityEngine;
-using System;
 
 public static class DataTableManager
 {
@@ -15,6 +11,8 @@ public static class DataTableManager
         tables.Clear();
         var stringTable = new StringTable();
         tables.Add(typeof(StringTable), stringTable);
+        var skillTable = new SkillTable();
+        tables.Add(typeof(SkillTable), skillTable);
     }
 
     public static T GetTable<T>() where T : DataTable
