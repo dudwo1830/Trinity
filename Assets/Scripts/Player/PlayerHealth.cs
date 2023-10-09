@@ -46,10 +46,10 @@ public class PlayerHealth : LivingEntity
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        if (!Dead)
-        {
-            playerAudioSource.PlayOneShot(hitClip);
-        }
+        //if (!Dead)
+        //{
+        //    playerAudioSource.PlayOneShot(hitClip);
+        //}
         base.OnDamage(damage, hitPoint, hitNormal);
         healthSlider.value = Health;
         if (hitEffect != null)
@@ -63,7 +63,7 @@ public class PlayerHealth : LivingEntity
     {
         base.Die();
 
-        playerAudioSource.PlayOneShot(deathClip);
+        //playerAudioSource.PlayOneShot(deathClip);
 
         //playerAnimator.SetTrigger("Die");
         playerMovement.enabled = false;

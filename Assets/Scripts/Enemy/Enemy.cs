@@ -66,7 +66,8 @@ public class Enemy : LivingEntity
     {
         if (text == string.Empty || text == null)
         {
-            actionTextUI.gameObject.SetActive(false);
+            actionTextUI.text = string.Empty;
+            //actionTextUI.gameObject.SetActive(false);
         }
         else
         {

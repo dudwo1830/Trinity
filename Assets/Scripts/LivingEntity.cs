@@ -25,7 +25,6 @@ public class LivingEntity : MonoBehaviour, IDamageable
         {
             Die();
         }
-        Debug.Log(Health);
     }
 
     public virtual void OnHeal(float heal)

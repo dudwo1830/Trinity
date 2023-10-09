@@ -44,6 +44,7 @@ public class SkillTable : DataTable
             dic.Clear();
             foreach (var record in records)
             {
+                record.defaultAmount = record.Amount;
                 dic.Add(record.Name, record);
             }
         }
@@ -88,5 +89,13 @@ public class SkillTable : DataTable
             list.Add(item.Value);
         }
         return list;
+    }
+
+    public void ResetAllSkill()
+    {
+        foreach (var skill in dic)
+        {
+            skill.Value.ResetData();
+        }
     }
 }

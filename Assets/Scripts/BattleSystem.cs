@@ -65,6 +65,7 @@ public class BattleSystem : MonoBehaviour
         foreach(var skill in skillList)
         {
             SkillButtonManager.Instance.CreateSkillButton(skill);
+            SkillButtonManager.Instance.CreateUpgradeButton(skill);
         }
 
         Debug.Log("Start\nPress Alpha1 is Immediately Enemy Encount");
@@ -72,13 +73,21 @@ public class BattleSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && state == BattleState.NONE)
         {
             SetupBattle();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2) && state != BattleState.NONE && state != BattleState.QTE)
         {
-            BattleOut();
+            Win();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3) && state != BattleState.NONE && state != BattleState.QTE)
+        {
+            Lose();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4) && state == BattleState.NONE)
+        {
+            SkillButtonManager.Instance.ResetAllSkill();
         }
     }
 
@@ -121,7 +130,6 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log($"QTE Result: {qte.IsSuccess}");
 
-        //enemyAction = skillList[Random.Range(0, skillList.Count)];
         enemyAction = DataTableManager.GetTable<SkillTable>().GetRandomSkill();
 
         if (qte.IsSuccess)
@@ -187,7 +195,6 @@ public class BattleSystem : MonoBehaviour
                 currentEnemy.OnDamage(playerAction.Amount, Vector3.zero, Vector3.zero);
                 if (currentEnemy.Dead)
                 {
-                    state = BattleState.WIN;
                     Win();
                 }
                 else
@@ -198,10 +205,9 @@ public class BattleSystem : MonoBehaviour
                 break;
             case BattleResult.LOSE:
                 Debug.Log("== RESULT: ENEMY ATTACK ==");
-                playerEntity.OnDamage(enemyAction.Amount, Vector3.zero, Vector3.zero);
+                playerEntity.OnDamage(20, Vector3.zero, Vector3.zero);
                 if (playerEntity.Dead)
                 {
-                    state = BattleState.LOSE;
                     Lose();
                 }
                 else
@@ -215,12 +221,22 @@ public class BattleSystem : MonoBehaviour
 
     public void Win()
     {
-        Debug.Log("Player Win");
+        state = BattleState.WIN;
+        SkillButtonManager.Instance.SelectUpgrade();
+    }
+    
+    public void PlayerUpgrade()
+    {
+        if (state != BattleState.WIN)
+        {
+            return;
+        }
         BattleOut();
     }
 
     public void Lose()
     {
+        state = BattleState.LOSE;
         Debug.Log("Player Lose");
         playerEntity.Revive();
         BattleOut();

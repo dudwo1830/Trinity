@@ -57,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
         if (playerInput.vertical > 0f || playerInput.vertical < 0f || playerInput.horizontal > 0f || playerInput.horizontal < 0f)
         {
             BattleSystem.Instance.encountChance += Random.Range(0, Time.deltaTime * 100f);
-            Debug.Log($"Encount Chance: {BattleSystem.Instance.encountChance}");
         }
 
         if (BattleSystem.Instance.encountChance >= 100f)
