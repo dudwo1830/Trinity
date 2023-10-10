@@ -1,4 +1,4 @@
 Id,Name,Description,Attribute,Amount,Type,Level,UpgradeAmount
-1,Skill_A,{{Amount}} Damage,1,10,1,0,5
-2,Skill_B,{{Amount}} Damage,2,10,1,0,5
-3,Skill_C,{{Amount}} Damage,3,10,1,0,5
+1,Rock,{{Amount}} Damage,1,10,1,0,5
+2,Scissors,{{Amount}} Damage,2,10,1,0,5
+3,Paper,{{Amount}} Damage,3,10,1,0,5

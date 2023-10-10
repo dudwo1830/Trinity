@@ -265,7 +265,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 250}
-  m_SizeDelta: {x: 400, y: 200}
+  m_SizeDelta: {x: 400, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3054016282739195150
 MonoBehaviour:
@@ -304,6 +304,7 @@ GameObject:
   - component: {fileID: 609255289537435260}
   - component: {fileID: 4560959868956970357}
   - component: {fileID: 6608292300061173801}
+  - component: {fileID: 104078677550897118}
   m_Layer: 5
   m_Name: ActionText
   m_TagString: Untagged
@@ -328,7 +329,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 80}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4560959868956970357
 CanvasRenderer:
@@ -385,8 +386,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 90
+  m_fontSizeBase: 90
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -427,6 +428,26 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &104078677550897118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8880608730857738230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: 90
+  m_LayoutPriority: 1
 --- !u!1001 &2290569793731167269
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -469,19 +490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3848745849616565636, guid: 6192cf1412cda7d4aa5135f315c90653, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 3848745849616565636, guid: 6192cf1412cda7d4aa5135f315c90653, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3848745849616565636, guid: 6192cf1412cda7d4aa5135f315c90653, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3848745849616565636, guid: 6192cf1412cda7d4aa5135f315c90653, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3848745849616565636, guid: 6192cf1412cda7d4aa5135f315c90653, type: 3}
       propertyPath: m_LocalPosition.x
@@ -540,11 +549,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125675416542105204, guid: 6192cf1412cda7d4aa5135f315c90653, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: m_MinHeight
+      value: 50
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7125675416542105204, guid: 6192cf1412cda7d4aa5135f315c90653, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

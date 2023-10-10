@@ -51,6 +51,7 @@ public class SkillButtonManager : MonoBehaviour
                     break;
             }
         }
+        
         button.onClick.AddListener(() => 
         {
             BattleSystem.Instance.OnSkillButton(data);

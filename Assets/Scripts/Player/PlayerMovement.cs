@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (BattleSystem.Instance.encountChance >= 100f)
         {
-            BattleSystem.Instance.SetupBattle();
+            BattleSystem.Instance.SetupBattle(transform);
         }
     }
 }
