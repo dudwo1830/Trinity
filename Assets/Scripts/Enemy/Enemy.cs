@@ -1,4 +1,3 @@
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,18 +12,14 @@ public class Enemy : LivingEntity
 
     private Animator enemyAnimator;
     private AudioSource enemyAudioSource;
-    private Renderer enemyRenderer;
 
     public TextMeshProUGUI actionTextUI;
-
     private float damage = 20f;
-    private float lastAttackTime;
 
     private void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
         enemyAudioSource = GetComponent<AudioSource>();
-        enemyRenderer = GetComponent<Renderer>();
     }
     public void Setup(float health, float damage, float speed, float attackRate)
     {
@@ -34,7 +29,7 @@ public class Enemy : LivingEntity
         healthSlider.minValue = 0f;
         healthSlider.maxValue = startingHealth;
         healthSlider.value = Health;
-        //pathFinder.speed = speed;
+        healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
     }
 
     private void Start()
@@ -51,6 +46,7 @@ public class Enemy : LivingEntity
     {
         base.OnDamage(damage, hitPoint, hitNormal);
         healthSlider.value = Health;
+        healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
     }
 
     public override void Die()
@@ -58,8 +54,6 @@ public class Enemy : LivingEntity
         Debug.Log("Enemy Die");
         base.Die();
         
-        //enemyAnimator.SetTrigger("Die");
-        //enemyAudioSource.PlayOneShot(deathClip);
     }
 
     public void SetActionText(string text)
@@ -67,12 +61,10 @@ public class Enemy : LivingEntity
         if (text == string.Empty || text == null)
         {
             actionTextUI.text = string.Empty;
-            //actionTextUI.gameObject.SetActive(false);
         }
         else
         {
             actionTextUI.text = text;
-            actionTextUI.gameObject.SetActive(true);
         }
     }
 }

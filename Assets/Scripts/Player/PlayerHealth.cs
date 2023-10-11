@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,14 +13,12 @@ public class PlayerHealth : LivingEntity
     public AudioClip hitClip;
 
     private Animator playerAnimator;
-    private PlayerMovement playerMovement;
     private AudioSource playerAudioSource;
 
     private void Awake()
     {
         playerAudioSource = GetComponent<AudioSource>();
         playerAnimator = GetComponent<Animator>();
-        playerMovement = GetComponent<PlayerMovement>();
     }
 
     protected override void OnEnable()
@@ -29,14 +28,11 @@ public class PlayerHealth : LivingEntity
         healthSlider.gameObject.SetActive(true);
         healthSlider.minValue = 0f;
         healthSlider.maxValue = startingHealth;
-        healthSlider.value = Health;
-
-        playerMovement.enabled = true;
+        UpdateSlider();
     }
 
     private void Update()
     {
-        healthSlider.value = Health;
     }
 
     public override void OnHeal(float heal)
@@ -51,29 +47,24 @@ public class PlayerHealth : LivingEntity
         //    playerAudioSource.PlayOneShot(hitClip);
         //}
         base.OnDamage(damage, hitPoint, hitNormal);
-        healthSlider.value = Health;
         if (hitEffect != null)
         {
             StopCoroutine(hitEffect);
         }
         //hitEffect = StartCoroutine(HitEffect(1f));
+        UpdateSlider();
     }
 
     public override void Die()
     {
         base.Die();
-
         //playerAudioSource.PlayOneShot(deathClip);
-
         //playerAnimator.SetTrigger("Die");
-        playerMovement.enabled = false;
     }
 
     public override void Revive(float heal = 50f)
     {
         base.Revive(heal);
-        healthSlider.value = Health;
-        playerMovement.enabled = true; 
     }
 
     //IEnumerator HitEffect(float duration)
@@ -96,5 +87,12 @@ public class PlayerHealth : LivingEntity
     public void RestartLevel()
     {
         playerAnimator.SetFloat("Move", 0f);
+    }
+
+    public void UpdateSlider()
+    {
+
+        healthSlider.value = Health;
+        healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
     }
 }

@@ -75,7 +75,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && state == BattleState.NONE)
         {
-            SetupBattle(playerTransform);
+            SetupBattle();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2) && state != BattleState.NONE && state != BattleState.QTE)
         {
@@ -89,11 +89,16 @@ public class BattleSystem : MonoBehaviour
         {
             SkillButtonManager.Instance.ResetAllSkill();
         }
+
+        if(encountChance >= 100f)
+        {
+            playerMovement.enabled = false;
+            SetupBattle();
+        }
     }
 
-    public void SetupBattle(Transform transform)
+    public void SetupBattle()
     {
-        playerMovement.enabled = false;
         encountChance = 0f;
 
         if (currentEnemy != null)
@@ -101,7 +106,8 @@ public class BattleSystem : MonoBehaviour
             Destroy(currentEnemy.gameObject);
         }
 
-        currentEnemy = Instantiate(enemyList[0], transform.position + new Vector3(0,0,5f), Quaternion.identity);
+        currentEnemy = Instantiate(enemyList[0], playerTransform.position + new Vector3(0,0,5f), Quaternion.identity);
+
         currentEnemy.Setup(100, 0, 0, 0);
 
         currentEnemy.gameObject.SetActive(true);

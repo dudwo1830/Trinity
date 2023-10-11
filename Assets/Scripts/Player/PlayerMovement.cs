@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -57,11 +58,6 @@ public class PlayerMovement : MonoBehaviour
         if (playerInput.vertical > 0f || playerInput.vertical < 0f || playerInput.horizontal > 0f || playerInput.horizontal < 0f)
         {
             BattleSystem.Instance.encountChance += Random.Range(0, Time.deltaTime * 100f);
-        }
-
-        if (BattleSystem.Instance.encountChance >= 100f)
-        {
-            BattleSystem.Instance.SetupBattle(transform);
         }
     }
 }
