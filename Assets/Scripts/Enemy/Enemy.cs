@@ -34,12 +34,15 @@ public class Enemy : LivingEntity
 
     private void Start()
     {
-
+        Setup(100, 10, 0, 0);
     }
 
     private void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            OnDamage(10, Vector3.zero, Vector3.zero);
+        }
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
