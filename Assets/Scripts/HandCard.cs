@@ -73,7 +73,6 @@ public class HandCard : MonoBehaviour
         //Delete
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            Debug.Log("Delete CardList At LastIndex");
             DeleteCard(cardList.Count - 1);
         }
     }
@@ -100,7 +99,6 @@ public class HandCard : MonoBehaviour
             ResetCard();
         }
         var randomIndex = Random.Range(0, cardList.Count);
-        Debug.Log(randomIndex);
         var card = cardList[randomIndex];
         card.gameObject.SetActive(true);
         handCardList.Add(card);
@@ -136,7 +134,6 @@ public class HandCard : MonoBehaviour
 
     private void DeleteCard(int index)
     {
-        Debug.Log($"DeleteIndex: {index}");
         Destroy(cardList[index].gameObject);
         cardList.RemoveAt(index);
         UpdateCardCount();

@@ -23,6 +23,7 @@ public class Enemy : LivingEntity
         enemyAnimator = GetComponent<Animator>();
         enemyAudioSource = GetComponent<AudioSource>();
     }
+
     public void Setup(float health, float damage, float speed, float attackRate)
     {
         startingHealth = health;
@@ -59,7 +60,7 @@ public class Enemy : LivingEntity
     public void SetAction(CardData data)
     {
         action = data;
-        SetActionText(action.Name);
+        SetActionText($"{action.Name} / {action.Amount}");
     }
 
     public void EnemyAction(LivingEntity target)

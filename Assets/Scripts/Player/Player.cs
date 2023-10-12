@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : LivingEntity
+public class Player : LivingEntity
 {
     private Coroutine hitEffect;
 
@@ -12,8 +12,12 @@ public class PlayerHealth : LivingEntity
     public AudioClip deathClip;
     public AudioClip hitClip;
 
+    public TextMeshProUGUI coastText;
     private Animator playerAnimator;
     private AudioSource playerAudioSource;
+
+    public int maxCoast { get; private set; } = 3;
+    public int currentCoast { get; set; } = 0;
 
     private void Awake()
     {

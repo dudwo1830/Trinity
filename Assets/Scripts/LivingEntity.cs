@@ -1,5 +1,7 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LivingEntity : MonoBehaviour, IDamageable
 {
@@ -11,7 +13,14 @@ public class LivingEntity : MonoBehaviour, IDamageable
     public bool Dead { get; private set; }
     public float Shield { get; private set; }
 
+    public Image shieldUI;
+
     public event Action onDeathEvent;
+
+    private void Awake()
+    {
+        shieldUI.gameObject.SetActive(false);
+    }
 
     protected virtual void OnEnable()
     {
@@ -21,23 +30,19 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        if (Shield > 0)
+        var realDamage = Shield -= damage;
+        UpdateShieldText();
+
+        if (realDamage > 0)
         {
-            Debug.Log($"Shield: {Shield}");
-            damage = OnDamageShield(damage);
-            Debug.Log($"Real Damage: {damage}");
+            return;
         }
 
-        Health -= damage;
+        Health -= -realDamage;
         if (Health <= 0 && !Dead)
         {
             Die();
         }
-    }
-
-    public virtual float OnDamageShield(float damage)
-    {
-        return Mathf.Clamp(Shield -= damage, 0, damage);
     }
 
     public virtual void OnHeal(float heal)
@@ -48,11 +53,13 @@ public class LivingEntity : MonoBehaviour, IDamageable
     public virtual void AddShield(float shield)
     {
         Shield += shield;
+        UpdateShieldText();
     }
 
     public virtual void ResetShield()
     {
         Shield = 0;
+        UpdateShieldText();
     }
 
     public virtual void Die()
@@ -69,5 +76,19 @@ public class LivingEntity : MonoBehaviour, IDamageable
     {
         Dead = false;
         Health = heal;
+    }
+
+    public virtual void UpdateShieldText()
+    {
+        if (Shield > 0)
+        {
+            shieldUI.gameObject.SetActive(true);
+            shieldUI.GetComponentInChildren<TextMeshProUGUI>().text = Shield.ToString();
+        }
+        else
+        {
+            Shield = 0;
+            shieldUI.gameObject.SetActive(false);
+        }
     }
 }

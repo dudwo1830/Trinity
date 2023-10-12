@@ -100,7 +100,6 @@ public class BattleSystem : MonoBehaviour
 
     public void ENEMYREADY()
     {
-        battleEnemyList.ForEach(enemy => enemy.ResetShield());
         var cardTable = DataTableManager.GetTable<CardTable>();
         foreach (var enemy in battleEnemyList)
         {
@@ -130,6 +129,7 @@ public class BattleSystem : MonoBehaviour
 
     public void EnemyTurn()
     {
+        battleEnemyList.ForEach(enemy => enemy.ResetShield());
         foreach (var enemy in battleEnemyList)
         {
             enemy.EnemyAction(playerEntity);
