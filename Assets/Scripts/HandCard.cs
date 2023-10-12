@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
 public class HandCard : MonoBehaviour
@@ -11,7 +12,11 @@ public class HandCard : MonoBehaviour
 
     private List<Card> cardList = new List<Card>();
     private int maxCardCount = 0;
+    public TextMeshProUGUI cardCountText;
+
     private List<Card> usedCardList = new List<Card>();
+    public TextMeshProUGUI usedCardCountText;
+
     private List<Card> handCardList = new List<Card>();
 
     public int startDrawCount = 5;
@@ -80,6 +85,7 @@ public class HandCard : MonoBehaviour
         card.gameObject.SetActive(false);
         cardList.Add(card);
         maxCardCount = cardList.Count;
+        UpdateCardCount();
     }
 
     public void DrawCard()
@@ -99,6 +105,7 @@ public class HandCard : MonoBehaviour
         card.gameObject.SetActive(true);
         handCardList.Add(card);
         cardList.Remove(card);
+        UpdateCardCount();
     }
 
     private void ResetCard()
@@ -108,6 +115,7 @@ public class HandCard : MonoBehaviour
             cardList.Add(card);
         }
         usedCardList.Clear();
+        UpdateCardCount();
     }
 
     public void UseCard(LivingEntity target)
@@ -123,6 +131,7 @@ public class HandCard : MonoBehaviour
         usedCardList.Add(selectedCard);
         handCardList.Remove(selectedCard);
         selectedCard = null;
+        UpdateCardCount();
     }
 
     private void DeleteCard(int index)
@@ -130,5 +139,12 @@ public class HandCard : MonoBehaviour
         Debug.Log($"DeleteIndex: {index}");
         Destroy(cardList[index].gameObject);
         cardList.RemoveAt(index);
+        UpdateCardCount();
+    }
+
+    private void UpdateCardCount()
+    {
+        cardCountText.text = cardList.Count.ToString();
+        usedCardCountText.text = usedCardList.Count.ToString();
     }
 }
