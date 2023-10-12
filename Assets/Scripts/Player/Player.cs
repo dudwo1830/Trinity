@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class Player : LivingEntity
 {
@@ -18,6 +21,7 @@ public class Player : LivingEntity
 
     public int maxCoast { get; private set; } = 3;
     public int currentCoast { get; set; } = 0;
+
 
     private void Awake()
     {
@@ -93,9 +97,52 @@ public class Player : LivingEntity
         playerAnimator.SetFloat("Move", 0f);
     }
 
+    public void ResetCoast()
+    {
+        currentCoast = maxCoast;
+        UpdateCoastUI();
+    }
+
     public void UpdateSlider()
     {
         healthSlider.value = Health;
         healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
+    }
+
+    public void UpdateCoastUI()
+    {
+        coastText.text = $"{currentCoast}/{maxCoast}";
+    }
+
+    public bool CanUseCard()
+    {
+        return HandCard.Instance.selectedCard != null && currentCoast >= HandCard.Instance.selectedCard.cardData.Coast;
+    }
+
+    public void ActiveCard(LivingEntity entity)
+    {
+        var enemy = entity.GetComponentInParent<Enemy>();
+        switch (HandCard.Instance.selectedCard.cardData.Type)
+        {
+            case CardData.CardType.None:
+                break;
+            case CardData.CardType.Attack:
+                if (enemy == null)
+                {
+                    return;
+                }
+                enemy.OnDamage(HandCard.Instance.selectedCard.cardData.Amount, Vector3.zero, Vector3.zero);
+                break;
+            case CardData.CardType.Defense:
+                AddShield(HandCard.Instance.selectedCard.cardData.Amount);
+                break;
+            case CardData.CardType.Heal:
+                OnHeal(HandCard.Instance.selectedCard.cardData.Amount);
+                break;
+            default:
+                break;
+        }
+        currentCoast -= HandCard.Instance.selectedCard.cardData.Coast;
+        UpdateCoastUI();
     }
 }

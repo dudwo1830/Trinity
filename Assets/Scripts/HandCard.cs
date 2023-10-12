@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HandCard : MonoBehaviour
 {
-    public static HandCard Instance {  get; set; }
+    public static HandCard Instance { get; set; }
 
     public Card CardPrefab;
     public Transform cardTransform;
@@ -118,13 +118,14 @@ public class HandCard : MonoBehaviour
 
     public void UseCard(LivingEntity target)
     {
-        if (selectedCard == null)
+        var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        if (!player.CanUseCard())
         {
             return;
         }
         //var card = handCardList[selectedCardIndex];
-        selectedCard.CardAction(target);
-
+        //selectedCard.CardAction(target);
+        player.ActiveCard(target);
         selectedCard.gameObject.SetActive(false);
         usedCardList.Add(selectedCard);
         handCardList.Remove(selectedCard);

@@ -14,6 +14,7 @@ public class CardData
     public CardType Type { get; set; }
     public int MaxLevel { get; set; }
     public float UpgradeAmount { get; set; }
+    public int Coast { get; set; }
 
     public float defaultAmount;
     public int level;

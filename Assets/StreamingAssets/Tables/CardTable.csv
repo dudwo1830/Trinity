@@ -1,3 +1,3 @@
-Id,Name,Description,Amount,Type,MaxLevel,UpgradeAmount
-1,타격,피해를 {{Amount}} 줍니다,6,Attack,1,3
-2,수비,<color=orange>방어도</color> 를 {{Amount}} 얻습니다,5,Defense,1,3
+Id,Name,Description,Amount,Type,MaxLevel,UpgradeAmount,Coast
+1,타격,피해를 {{Amount}} 줍니다,6,Attack,1,3,1
+2,수비,<color=orange>방어도</color> 를 {{Amount}} 얻습니다,5,Defense,1,3,1

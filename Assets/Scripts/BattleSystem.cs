@@ -18,7 +18,7 @@ public enum BattleState
 public class BattleSystem : MonoBehaviour
 {
     public static BattleSystem Instance { get; set; }
-    public LivingEntity playerEntity;
+    public Player player;
     public Button turnEndButton;
 
     public RectTransform enemySpawnTarget;
@@ -113,7 +113,8 @@ public class BattleSystem : MonoBehaviour
     public void PlayerTurn()
     {
         Debug.Log("Player Turn");
-        playerEntity.ResetShield();
+        player.ResetCoast();
+        player.ResetShield();
         turnEndButton.gameObject.SetActive(true);
     }
     public void TurnEnd()
@@ -132,7 +133,7 @@ public class BattleSystem : MonoBehaviour
         battleEnemyList.ForEach(enemy => enemy.ResetShield());
         foreach (var enemy in battleEnemyList)
         {
-            enemy.EnemyAction(playerEntity);
+            enemy.EnemyAction(player);
         }
 
         state = BattleState.END;
@@ -163,7 +164,7 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.LOSE;
         Debug.Log("Player Lose");
-        playerEntity.Revive();
+        player.Revive();
         BattleExit();
     }
 
