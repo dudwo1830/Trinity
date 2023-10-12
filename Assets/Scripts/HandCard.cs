@@ -112,12 +112,17 @@ public class HandCard : MonoBehaviour
 
     public void UseCard(LivingEntity target)
     {
+        if (selectedCard == null)
+        {
+            return;
+        }
         //var card = handCardList[selectedCardIndex];
         selectedCard.CardAction(target);
 
         selectedCard.gameObject.SetActive(false);
         usedCardList.Add(selectedCard);
         handCardList.Remove(selectedCard);
+        selectedCard = null;
     }
 
     private void DeleteCard(int index)
