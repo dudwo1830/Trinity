@@ -1,37 +1,36 @@
-using Newtonsoft.Json.Bson;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
     public CardData cardData;
     private Button button;
     public bool IsSelected { get; private set; }
     public float hoverMovementY = 20f;
-    private Vector3 defaultPosition;
+    private Vector3 prevPosition;
 
     private void Awake()
     {
-        Debug.Log("Awake");
         button = GetComponent<Button>();
     }
 
     private void Start()
     {
-        button.onClick.AddListener(() =>
-        {
-            if (IsSelected)
-            {
-                IsSelected = false;
-            }
-            else
-            {
-                button.Select();
-            }
-        });
+        //button.onClick.AddListener(() =>
+        //{
+        //    if (IsSelected)
+        //    {
+        //        IsSelected = false;
+        //    }
+        //    else
+        //    {
+        //        button.Select();
+        //    }
+        //});
+    
 
         foreach (var item in button.GetComponentsInChildren<TextMeshProUGUI>())
         {
@@ -56,7 +55,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             return;
         }
-        defaultPosition = transform.position;
+        prevPosition = transform.position;
         gameObject.transform.position += new Vector3(0, hoverMovementY, 0);
     }
 
@@ -66,18 +65,38 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             return;
         }
-        gameObject.transform.position = defaultPosition;
+        gameObject.transform.position = prevPosition;
     }
 
-    public void OnSelect()
+    public void CardAction(LivingEntity target)
     {
-        HandCard.Instance.selectCard = null;
+        switch (cardData.Type)
+        {
+            case CardData.CardType.None:
+                break;
+            case CardData.CardType.Attack:
+                target.OnDamage(cardData.Amount, Vector3.zero, Vector3.zero);
+                break;
+            case CardData.CardType.Defense:
+                target.AddShield(cardData.Amount);
+                break;
+            case CardData.CardType.Heal:
+                target.OnHeal(cardData.Amount);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        HandCard.Instance.selectedCard = this;
         IsSelected = true;
     }
 
-    public void OnDeselect()
+    public void OnDeselect(BaseEventData eventData)
     {
-        HandCard.Instance.selectCard = null;
-        gameObject.transform.position = defaultPosition;
+        gameObject.transform.position = prevPosition;
+        IsSelected = false;
     }
 }

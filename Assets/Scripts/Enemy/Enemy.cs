@@ -13,8 +13,10 @@ public class Enemy : LivingEntity
     private Animator enemyAnimator;
     private AudioSource enemyAudioSource;
 
-    public TextMeshProUGUI actionTextUI;
     private float damage = 20f;
+
+    public TextMeshProUGUI actionTextUI;
+    private CardData action;
 
     private void Awake()
     {
@@ -28,8 +30,7 @@ public class Enemy : LivingEntity
 
         healthSlider.minValue = 0f;
         healthSlider.maxValue = startingHealth;
-        healthSlider.value = Health;
-        healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
+        UpdateSlider();
     }
 
     private void Start()
@@ -39,17 +40,13 @@ public class Enemy : LivingEntity
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            OnDamage(10, Vector3.zero, Vector3.zero);
-        }
+
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.OnDamage(damage, hitPoint, hitNormal);
-        healthSlider.value = Health;
-        healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
+        UpdateSlider();
     }
 
     public override void Die()
@@ -57,6 +54,32 @@ public class Enemy : LivingEntity
         Debug.Log("Enemy Die");
         base.Die();
         
+    }
+
+    public void SetAction(CardData data)
+    {
+        action = data;
+        SetActionText(action.Name);
+    }
+
+    public void EnemyAction(LivingEntity target)
+    {
+        switch (action.Type)
+        {
+            case CardData.CardType.None:
+                break;
+            case CardData.CardType.Attack:
+                target.OnDamage(action.Amount, Vector3.zero, Vector3.zero);
+                break;
+            case CardData.CardType.Defense:
+                AddShield(action.Amount);
+                break;
+            case CardData.CardType.Heal:
+                OnHeal(action.Amount);
+                break;
+            default:
+                break;
+        }
     }
 
     public void SetActionText(string text)
@@ -69,5 +92,11 @@ public class Enemy : LivingEntity
         {
             actionTextUI.text = text;
         }
+    }
+
+    public void UpdateSlider()
+    {
+        healthSlider.value = Health;
+        healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
     }
 }

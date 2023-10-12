@@ -91,7 +91,6 @@ public class PlayerHealth : LivingEntity
 
     public void UpdateSlider()
     {
-
         healthSlider.value = Health;
         healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
     }

@@ -54,10 +54,5 @@ public class PlayerMovement : MonoBehaviour
         var position = playerRigidbody.position;
         position += direction * moveSpeed * Time.deltaTime;
         playerRigidbody.MovePosition(position);
-
-        if (playerInput.vertical > 0f || playerInput.vertical < 0f || playerInput.horizontal > 0f || playerInput.horizontal < 0f)
-        {
-            BattleSystem.Instance.encountChance += Random.Range(0, Time.deltaTime * 100f);
-        }
     }
 }
