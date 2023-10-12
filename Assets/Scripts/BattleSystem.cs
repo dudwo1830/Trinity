@@ -124,8 +124,16 @@ public class BattleSystem : MonoBehaviour
             return;
         }
 
-        state = BattleState.ENEMYTURN;
-        EnemyTurn();
+        if (battleEnemyList.Count == 0)
+        {
+            state = BattleState.WIN;
+            Win();
+        }
+        else
+        {
+            state = BattleState.ENEMYTURN;
+            EnemyTurn();
+        }
     }
 
     public void EnemyTurn()
@@ -136,8 +144,16 @@ public class BattleSystem : MonoBehaviour
             enemy.EnemyAction(player);
         }
 
-        state = BattleState.END;
-        End();
+        if (player.Dead)
+        {
+            state = BattleState.LOSE;
+            Lose();
+        }
+        else
+        {
+            state = BattleState.END;
+            End();
+        }
     }
 
     public void End()
@@ -149,6 +165,7 @@ public class BattleSystem : MonoBehaviour
     public void Win()
     {
         state = BattleState.WIN;
+        
     }
     
     public void PlayerUpgrade()
