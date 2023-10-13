@@ -100,12 +100,12 @@ public class BattleSystem : MonoBehaviour
 
     public void Draw()
     {
-        for (int i = 0; i < HandCard.Instance.drawCount; i++)
-        {
-            HandCard.Instance.DrawCard();
-        }
+        HandCard.Instance.Ready();
         state = BattleState.ENEMYREADY;
         ENEMYREADY();
+        //for (int i = 0; i < HandCard.Instance.drawCount; i++)
+        //{
+        //}
     }
 
     public void ENEMYREADY()

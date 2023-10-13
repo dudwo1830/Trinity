@@ -18,8 +18,7 @@ public class HandCard : MonoBehaviour
 
     private List<Card> handCardList = new List<Card>();
 
-    public int startDrawCount = 5;
-    public int drawCount = 2;
+    public int drawCount = 5;
     private CardTable cardTable;
 
     public Card selectedCard;
@@ -51,15 +50,20 @@ public class HandCard : MonoBehaviour
 
     public void Ready()
     {
-        for (int i = handCardList.Count - 1; i >= 0; i--)
+        //for (int i = handCardList.Count - 1; i >= 0; i--)
+        //{
+        //    handCardList[i].gameObject.SetActive(false);
+        //    cardList.Add(handCardList[i]);
+        //    handCardList.RemoveAt(i);
+        //}
+        Debug.Log("Player Draw");
+        foreach (var card in handCardList)
         {
-            handCardList[i].gameObject.SetActive(false);
-            cardList.Add(handCardList[i]);
-            handCardList.RemoveAt(i);
+            card.gameObject.SetActive(false);
+            usedCardList.Add(card);
         }
-
-        Shuffle();
-        for (int i = 0; i < startDrawCount; i++)
+        handCardList.Clear();
+        for (int i = 0; i < drawCount; i++)
         {
             DrawCard();
         }
@@ -67,12 +71,6 @@ public class HandCard : MonoBehaviour
 
     public void Shuffle()
     {
-        for (int i = usedCardList.Count - 1; i >= 0; i--)
-        {
-            cardList.Add(usedCardList[i]);
-            usedCardList.RemoveAt(i);
-        }
-
         int random1, random2;
         for (int i = 0; i < cardList.Count; ++i)
         {
@@ -118,23 +116,23 @@ public class HandCard : MonoBehaviour
         card.cardData = data;
         card.gameObject.SetActive(false);
         cardList.Add(card);
-        maxCardCount = cardList.Count;
+        //maxCardCount = cardList.Count;
         UpdateCardCount();
     }
 
     public void DrawCard()
     {
-        if(handCardList.Count >= maxCardCount)
-        {
-            return;
-        }
+        //if(handCardList.Count >= maxCardCount)
+        //{
+        //    return;
+        //}
 
         if (cardList.Count == 0)
         {
             ResetCard();
         }
-        var randomIndex = UnityEngine.Random.Range(0, cardList.Count);
-        var card = cardList[randomIndex];
+        //var randomIndex = UnityEngine.Random.Range(0, cardList.Count);
+        var card = cardList[cardList.Count - 1];
         card.gameObject.SetActive(true);
         handCardList.Add(card);
         cardList.Remove(card);
@@ -148,6 +146,7 @@ public class HandCard : MonoBehaviour
             cardList.Add(card);
         }
         usedCardList.Clear();
+        Shuffle();
         UpdateCardCount();
     }
 
