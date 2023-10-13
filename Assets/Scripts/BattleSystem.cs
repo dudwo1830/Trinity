@@ -6,7 +6,7 @@ public enum BattleState
 {
     NONE,
     START,
-    DRAW,
+    CARD_DRAW,
     ENEMYREADY,
     PLAYERTURN,
     ENEMYTURN,
@@ -86,7 +86,7 @@ public class BattleSystem : MonoBehaviour
     public void SetupBattle()
     {
         Debug.Log("SetupBattle");
-        HandCard.Instance.Ready();
+        HandCard.Instance.ResetAllCard();
         var enemyCount = Random.Range(minEnemyCount, maxEnemyCount + 1);
         for (int i = 0; i < enemyCount; i++)
         {
@@ -94,28 +94,24 @@ public class BattleSystem : MonoBehaviour
             battleEnemyList.Add(enemy);
         }
 
-        state = BattleState.ENEMYREADY;
-        ENEMYREADY();
+        state = BattleState.CARD_DRAW;
+        Draw();
     }
 
     public void Draw()
     {
         HandCard.Instance.Ready();
         state = BattleState.ENEMYREADY;
-        ENEMYREADY();
-        //for (int i = 0; i < HandCard.Instance.drawCount; i++)
-        //{
-        //}
+        EnemyReady();
     }
 
-    public void ENEMYREADY()
+    public void EnemyReady()
     {
         var cardTable = DataTableManager.GetTable<CardTable>();
         foreach (var enemy in battleEnemyList)
         {
             enemy.SetAction(cardTable.GetRandomData());
         }
-
         state = BattleState.PLAYERTURN;
         PlayerTurn();
     }
@@ -160,7 +156,7 @@ public class BattleSystem : MonoBehaviour
 
     public void End()
     {
-        state = BattleState.DRAW;
+        state = BattleState.CARD_DRAW;
         Draw();
     }
 

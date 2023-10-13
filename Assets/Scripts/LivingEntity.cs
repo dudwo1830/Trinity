@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,8 @@ public class LivingEntity : MonoBehaviour, IDamageable
     public Image shieldUI;
 
     public event Action onDeathEvent;
+
+    public List<Condition> conditions = new List<Condition>();
 
     private void Awake()
     {

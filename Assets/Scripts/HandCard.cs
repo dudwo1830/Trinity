@@ -10,7 +10,6 @@ public class HandCard : MonoBehaviour
     public Transform cardTransform;
 
     private List<Card> cardList = new List<Card>();
-    private int maxCardCount = 0;
     public TextMeshProUGUI cardCountText;
 
     private List<Card> usedCardList = new List<Card>();
@@ -116,17 +115,11 @@ public class HandCard : MonoBehaviour
         card.cardData = data;
         card.gameObject.SetActive(false);
         cardList.Add(card);
-        //maxCardCount = cardList.Count;
         UpdateCardCount();
     }
 
     public void DrawCard()
     {
-        //if(handCardList.Count >= maxCardCount)
-        //{
-        //    return;
-        //}
-
         if (cardList.Count == 0)
         {
             ResetCard();
@@ -148,6 +141,24 @@ public class HandCard : MonoBehaviour
         usedCardList.Clear();
         Shuffle();
         UpdateCardCount();
+    }
+
+    public void ResetAllCard()
+    {
+        foreach (var card in usedCardList)
+        {
+            cardList.Add(card);
+        }
+        usedCardList.Clear();
+
+        foreach (var card in handCardList)
+        {
+            card.gameObject.SetActive(false);
+            usedCardList.Add(card);
+        }
+        handCardList.Clear();
+
+        Shuffle();
     }
 
     public void UseCard(LivingEntity target)

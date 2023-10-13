@@ -829,8 +829,7 @@ MonoBehaviour:
   cardTransform: {fileID: 1659721211}
   cardCountText: {fileID: 731256326}
   usedCardCountText: {fileID: 301578157}
-  startDrawCount: 5
-  drawCount: 2
+  drawCount: 5
   selectedCard: {fileID: 0}
 --- !u!61 &791519662
 BoxCollider2D:

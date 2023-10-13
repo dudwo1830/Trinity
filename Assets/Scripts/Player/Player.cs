@@ -27,6 +27,7 @@ public class Player : LivingEntity
     {
         playerAudioSource = GetComponent<AudioSource>();
         playerAnimator = GetComponent<Animator>();
+        startingHealth = 80;
     }
 
     protected override void OnEnable()
