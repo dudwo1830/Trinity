@@ -68,38 +68,37 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
         gameObject.transform.position = prevPosition;
     }
 
-    public void CardAction(LivingEntity target)
-    {
-        switch (cardData.Type)
-        {
-            case CardData.CardType.None:
-                break;
-            case CardData.CardType.Attack:
-                if (target.GetComponentInParent<Player>() != null)
-                {
-                    return;
-                }
-                
-                target.OnDamage(cardData.Amount, Vector3.zero, Vector3.zero);
-                break;
-            case CardData.CardType.Defense:
-                if (target.GetComponentInParent<Player>() == null)
-                {
-                    return;
-                }
-                target.AddShield(cardData.Amount);
-                break;
-            case CardData.CardType.Heal:
-                if (target.GetComponentInParent<Player>() == null)
-                {
-                    return;
-                }
-                target.OnHeal(cardData.Amount);
-                break;
-            default:
-                break;
-        }
-    }
+    //public void CardAction(LivingEntity target)
+    //{
+    //    switch (cardData.Type)
+    //    {
+    //        case CardData.CardType.None:
+    //            break;
+    //        case CardData.CardType.Attack:
+    //            if (target.GetComponentInParent<Player>() != null)
+    //            {
+    //                return;
+    //            }
+    //            target.OnDamage(cardData.Amount, Vector3.zero, Vector3.zero);
+    //            break;
+    //        case CardData.CardType.Defense:
+    //            if (target.GetComponentInParent<Player>() == null)
+    //            {
+    //                return;
+    //            }
+    //            target.AddShield(cardData.Amount);
+    //            break;
+    //        case CardData.CardType.Heal:
+    //            if (target.GetComponentInParent<Player>() == null)
+    //            {
+    //                return;
+    //            }
+    //            target.OnHeal(cardData.Amount);
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
 
     public void OnSelect(BaseEventData eventData)
     {

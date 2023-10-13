@@ -13,8 +13,6 @@ public class Enemy : LivingEntity
     private Animator enemyAnimator;
     private AudioSource enemyAudioSource;
 
-    private float damage = 20f;
-
     public TextMeshProUGUI actionTextUI;
     private CardData action;
 
@@ -22,21 +20,28 @@ public class Enemy : LivingEntity
     {
         enemyAnimator = GetComponent<Animator>();
         enemyAudioSource = GetComponent<AudioSource>();
+        Setup(20);
     }
 
-    public void Setup(float health, float damage, float speed, float attackRate)
+    public void Setup(float health, float damage = 0, float speed = 0, float attackRate = 0)
     {
         startingHealth = health;
-        this.damage = damage;
-
         healthSlider.minValue = 0f;
         healthSlider.maxValue = startingHealth;
-        UpdateSlider();
     }
 
     private void Start()
     {
-        Setup(100, 10, 0, 0);
+        UpdateSlider();
+        onDeathEvent += () => {
+            BattleSystem.Instance.battleEnemyList.Remove(this);
+            Debug.Log(BattleSystem.Instance.battleEnemyList.Count);
+            Destroy(gameObject);
+            if (BattleSystem.Instance.battleEnemyList.Count <= 0)
+            {
+                BattleSystem.Instance.Win();
+            }
+        };
     }
 
     private void Update()

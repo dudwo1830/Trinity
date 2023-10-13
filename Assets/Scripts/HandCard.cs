@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ public class HandCard : MonoBehaviour
 {
     public static HandCard Instance { get; set; }
 
-    public Card CardPrefab;
+    public Card cardPrefab;
     public Transform cardTransform;
 
     private List<Card> cardList = new List<Card>();
@@ -24,7 +23,6 @@ public class HandCard : MonoBehaviour
     private CardTable cardTable;
 
     public Card selectedCard;
-    private int selectedCardIndex;
 
     private void Awake()
     {
@@ -39,19 +37,51 @@ public class HandCard : MonoBehaviour
         }
 
         cardTable = DataTableManager.GetTable<CardTable>();
+        
     }
 
     private void Start()
     {
         for (int i = 0; i < 5; i++)
         {
-            AddCard(cardTable.GetCardByName("타격"));
-            AddCard(cardTable.GetCardByName("수비"));
+            AddCard(cardTable.GetDataByName("타격"));
+            AddCard(cardTable.GetDataByName("수비"));
+        }
+    }
+
+    public void Ready()
+    {
+        for (int i = handCardList.Count - 1; i >= 0; i--)
+        {
+            handCardList[i].gameObject.SetActive(false);
+            cardList.Add(handCardList[i]);
+            handCardList.RemoveAt(i);
         }
 
+        Shuffle();
         for (int i = 0; i < startDrawCount; i++)
         {
             DrawCard();
+        }
+    }
+
+    public void Shuffle()
+    {
+        for (int i = usedCardList.Count - 1; i >= 0; i--)
+        {
+            cardList.Add(usedCardList[i]);
+            usedCardList.RemoveAt(i);
+        }
+
+        int random1, random2;
+        for (int i = 0; i < cardList.Count; ++i)
+        {
+            random1 = Random.Range(0, cardList.Count);
+            random2 = Random.Range(0, cardList.Count);
+
+            var temp = cardList[random1];
+            cardList[random1] = cardList[random2];
+            cardList[random2] = temp;
         }
     }
 
@@ -63,11 +93,11 @@ public class HandCard : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            AddCard(cardTable.GetCardByName("타격"));
+            AddCard(cardTable.GetDataByName("타격"));
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            AddCard(cardTable.GetCardByName("수비"));
+            AddCard(cardTable.GetDataByName("수비"));
         }
 
         //Delete
@@ -75,11 +105,16 @@ public class HandCard : MonoBehaviour
         {
             DeleteCard(cardList.Count - 1);
         }
+        //Shuffle
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            Shuffle();
+        }
     }
 
     private void AddCard(CardData data)
     {
-        var card = Instantiate(CardPrefab, cardTransform);
+        var card = Instantiate(cardPrefab, cardTransform);
         card.cardData = data;
         card.gameObject.SetActive(false);
         cardList.Add(card);
@@ -98,7 +133,7 @@ public class HandCard : MonoBehaviour
         {
             ResetCard();
         }
-        var randomIndex = Random.Range(0, cardList.Count);
+        var randomIndex = UnityEngine.Random.Range(0, cardList.Count);
         var card = cardList[randomIndex];
         card.gameObject.SetActive(true);
         handCardList.Add(card);
@@ -119,13 +154,16 @@ public class HandCard : MonoBehaviour
     public void UseCard(LivingEntity target)
     {
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        if (!player.CanUseCard())
+        if (!player.CanUseCard(target))
         {
             return;
         }
         //var card = handCardList[selectedCardIndex];
         //selectedCard.CardAction(target);
-        player.ActiveCard(target);
+        if (!player.ActiveCard(target))
+        {
+            return;
+        }
         selectedCard.gameObject.SetActive(false);
         usedCardList.Add(selectedCard);
         handCardList.Remove(selectedCard);

@@ -114,12 +114,12 @@ public class Player : LivingEntity
         coastText.text = $"{currentCoast}/{maxCoast}";
     }
 
-    public bool CanUseCard()
+    public bool CanUseCard(LivingEntity entity)
     {
-        return HandCard.Instance.selectedCard != null && currentCoast >= HandCard.Instance.selectedCard.cardData.Coast;
+        return HandCard.Instance.selectedCard != null && currentCoast >= HandCard.Instance.selectedCard.cardData.Coast; 
     }
 
-    public void ActiveCard(LivingEntity entity)
+    public bool ActiveCard(LivingEntity entity)
     {
         var enemy = entity.GetComponentInParent<Enemy>();
         switch (HandCard.Instance.selectedCard.cardData.Type)
@@ -129,7 +129,7 @@ public class Player : LivingEntity
             case CardData.CardType.Attack:
                 if (enemy == null)
                 {
-                    return;
+                    return false;
                 }
                 enemy.OnDamage(HandCard.Instance.selectedCard.cardData.Amount, Vector3.zero, Vector3.zero);
                 break;
@@ -144,5 +144,6 @@ public class Player : LivingEntity
         }
         currentCoast -= HandCard.Instance.selectedCard.cardData.Coast;
         UpdateCoastUI();
+        return true;
     }
 }

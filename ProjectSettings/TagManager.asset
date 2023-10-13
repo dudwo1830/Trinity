@@ -8,8 +8,8 @@ TagManager:
   - Skill
   - Title
   - Button
-  - GameoverTitle
-  - GameoverButton
+  - GameoverWin
+  - GameoverLose
   layers:
   - Default
   - TransparentFX

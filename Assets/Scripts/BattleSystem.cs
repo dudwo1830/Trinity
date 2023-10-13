@@ -23,7 +23,7 @@ public class BattleSystem : MonoBehaviour
 
     public RectTransform enemySpawnTarget;
     public List<Enemy> enemyPrefabs = new List<Enemy>();
-    private List<Enemy> battleEnemyList = new List<Enemy>();
+    public List<Enemy> battleEnemyList = new List<Enemy>();
     public int minEnemyCount = 1;
     public int maxEnemyCount = 3;
 
@@ -40,14 +40,18 @@ public class BattleSystem : MonoBehaviour
             Debug.LogError("Instance is already");
             Destroy(gameObject);
         }
+
+        state = BattleState.NONE;
+        battleEnemyList.Clear();
+
+        turnEndButton.onClick.RemoveAllListeners();
+        turnEndButton.onClick.AddListener(() => TurnEnd());
+        turnEndButton.gameObject.SetActive(false);
     }
 
     private void Start()
     {
-        turnEndButton.onClick.AddListener(() => TurnEnd());
-        turnEndButton.gameObject.SetActive(false);
 
-        SetupBattle();
     }
 
     private void Update()
@@ -58,6 +62,11 @@ public class BattleSystem : MonoBehaviour
             {
                 FindEnemy(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F1) && state == BattleState.NONE)
+        {
+            SetupBattle();
         }
     }
 
@@ -77,6 +86,7 @@ public class BattleSystem : MonoBehaviour
     public void SetupBattle()
     {
         Debug.Log("SetupBattle");
+        HandCard.Instance.Ready();
         var enemyCount = Random.Range(minEnemyCount, maxEnemyCount + 1);
         for (int i = 0; i < enemyCount; i++)
         {
@@ -124,16 +134,8 @@ public class BattleSystem : MonoBehaviour
             return;
         }
 
-        if (battleEnemyList.Count == 0)
-        {
-            state = BattleState.WIN;
-            Win();
-        }
-        else
-        {
-            state = BattleState.ENEMYTURN;
-            EnemyTurn();
-        }
+        state = BattleState.ENEMYTURN;
+        EnemyTurn();
     }
 
     public void EnemyTurn()
@@ -165,9 +167,9 @@ public class BattleSystem : MonoBehaviour
     public void Win()
     {
         state = BattleState.WIN;
-        
+        UIManager.Instance.SetActiveGameoverUI(true, state);
     }
-    
+
     public void PlayerUpgrade()
     {
         if (state != BattleState.WIN)
@@ -181,8 +183,7 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.LOSE;
         Debug.Log("Player Lose");
-        player.Revive();
-        BattleExit();
+        UIManager.Instance.SetActiveGameoverUI(true, state);
     }
 
     private void BattleExit()

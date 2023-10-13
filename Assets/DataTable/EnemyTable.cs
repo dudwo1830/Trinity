@@ -1,20 +1,19 @@
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public class CardTable : DataTable
+public class EnemyTable : DataTable
 {
-    private string path = @"Tables/CardTable.csv";
+    private string path = @"Tables/EnemyTable.csv";
 
-    protected Dictionary<string, CardData> dic = new Dictionary<string, CardData>();
+    protected Dictionary<string, EnemyData> dic = new Dictionary<string, EnemyData>();
 
-    public CardTable()
+    public EnemyTable()
     {
         filePath = Path.Combine(Application.streamingAssetsPath, path);
         Load();
@@ -39,20 +38,23 @@ public class CardTable : DataTable
             config.HasHeaderRecord = true;
             var csv = new CsvReader(reader, config);
 
-            var records = csv.GetRecords<CardData>();
+            var records = csv.GetRecords<EnemyData>();
 
             dic.Clear();
             foreach (var record in records)
             {
-                record.defaultAmount = record.Amount;
-                record.level = 0;
                 dic.Add(record.Name, record);
+                var arr = record.CardListPlainText.Split("|");
+                foreach (var item in arr)
+                {
+                    record.usingCardList.Add(DataTableManager.GetTable<CardTable>().GetDataById(int.Parse(item)));
+                }
             }
         }
 
     }
 
-    public CardData GetDataByName(string name)
+    public EnemyData GetDataByName(string name)
     {
         if (!dic.ContainsKey(name))
         {
@@ -61,7 +63,7 @@ public class CardTable : DataTable
         return dic[name];
     }
 
-    public CardData GetDataById(int id)
+    public EnemyData GetDataById(int id)
     {
         foreach (var item in dic.Values)
         {
@@ -73,31 +75,23 @@ public class CardTable : DataTable
         return null;
     }
 
-    public CardData GetRandomData()
+    public EnemyData GetRandomData()
     {
         return dic.ElementAt(UnityEngine.Random.Range(0, dic.Count)).Value;
     }
 
-    public List<CardData> ToList()
+    public List<EnemyData> ToList()
     {
         if (dic.Count <= 0)
         {
             return null;
         }
 
-        var list = new List<CardData>();
+        var list = new List<EnemyData>();
         foreach (var item in dic)
         {
             list.Add(item.Value);
         }
         return list;
-    }
-
-    public void ResetAllCardData()
-    {
-        foreach (var card in dic)
-        {
-            card.Value.ResetData();
-        }
     }
 }
