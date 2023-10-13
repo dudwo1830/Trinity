@@ -1,13 +1,18 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HandCard : MonoBehaviour
 {
     public static HandCard Instance { get; set; }
 
+    public Transform allCardTransform;
+    public Transform usedCardTransform;
+
     public Card cardPrefab;
-    public Transform cardTransform;
+
+    public List<Card> allCardList = new List<Card>();
 
     private List<Card> cardList = new List<Card>();
     public TextMeshProUGUI cardCountText;
@@ -16,6 +21,7 @@ public class HandCard : MonoBehaviour
     public TextMeshProUGUI usedCardCountText;
 
     private List<Card> handCardList = new List<Card>();
+    public Transform handCardTransform;
 
     public int drawCount = 5;
     private CardTable cardTable;
@@ -33,18 +39,44 @@ public class HandCard : MonoBehaviour
             Debug.LogError("Instance is already");
             Destroy(gameObject);
         }
-
         cardTable = DataTableManager.GetTable<CardTable>();
-        
+
+        cardCountText.GetComponentInParent<Button>().onClick.AddListener(() => 
+        {
+            if (!UIManager.Instance.allCardListUI.activeSelf)
+            {
+                UIManager.Instance.SetActiveAllCardListUI(true);
+            }
+            else
+            {
+                UIManager.Instance.SetActiveAllCardListUI(false);
+            }
+        });
+
+        usedCardCountText.GetComponentInParent<Button>().onClick.AddListener(() =>
+        {
+            if (!UIManager.Instance.usedCardListUI.activeSelf)
+            {
+                UIManager.Instance.SetActiveUsedCardListUI(true);
+            }
+            else
+            {
+                UIManager.Instance.SetActiveUsedCardListUI(false);
+            }
+        });
     }
 
     private void Start()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
         {
             AddCard(cardTable.GetDataByName("타격"));
+        }
+        for (int i = 0; i < 4; i++)
+        {
             AddCard(cardTable.GetDataByName("수비"));
         }
+
     }
 
     public void Ready()
@@ -55,6 +87,7 @@ public class HandCard : MonoBehaviour
         //    cardList.Add(handCardList[i]);
         //    handCardList.RemoveAt(i);
         //}
+
         Debug.Log("Player Draw");
         foreach (var card in handCardList)
         {
@@ -111,10 +144,12 @@ public class HandCard : MonoBehaviour
 
     private void AddCard(CardData data)
     {
-        var card = Instantiate(cardPrefab, cardTransform);
-        card.cardData = data;
+        var card = Instantiate(cardPrefab, handCardTransform);
+        card.SetCardData(data);
         card.gameObject.SetActive(false);
         cardList.Add(card);
+        allCardList.Add(card);
+
         UpdateCardCount();
     }
 
@@ -124,6 +159,7 @@ public class HandCard : MonoBehaviour
         {
             ResetCard();
         }
+
         //var randomIndex = UnityEngine.Random.Range(0, cardList.Count);
         var card = cardList[cardList.Count - 1];
         card.gameObject.SetActive(true);

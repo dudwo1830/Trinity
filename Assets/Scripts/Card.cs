@@ -19,34 +19,6 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
 
     private void Start()
     {
-        //button.onClick.AddListener(() =>
-        //{
-        //    if (IsSelected)
-        //    {
-        //        IsSelected = false;
-        //    }
-        //    else
-        //    {
-        //        button.Select();
-        //    }
-        //});
-    
-
-        foreach (var item in button.GetComponentsInChildren<TextMeshProUGUI>())
-        {
-            switch (item.gameObject.name)
-            {
-                case "Name":
-                    item.text = $"{cardData.Name}";
-                    break;
-                case "Description":
-                    item.text = cardData.GetDescription();
-                    break;
-                case "Summary":
-                    item.text = $"{cardData.Type} / {cardData.Amount}";
-                    break;
-            }
-        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -68,38 +40,6 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
         gameObject.transform.position = prevPosition;
     }
 
-    //public void CardAction(LivingEntity target)
-    //{
-    //    switch (cardData.Type)
-    //    {
-    //        case CardData.CardType.None:
-    //            break;
-    //        case CardData.CardType.Attack:
-    //            if (target.GetComponentInParent<Player>() != null)
-    //            {
-    //                return;
-    //            }
-    //            target.OnDamage(cardData.Amount, Vector3.zero, Vector3.zero);
-    //            break;
-    //        case CardData.CardType.Defense:
-    //            if (target.GetComponentInParent<Player>() == null)
-    //            {
-    //                return;
-    //            }
-    //            target.AddShield(cardData.Amount);
-    //            break;
-    //        case CardData.CardType.Heal:
-    //            if (target.GetComponentInParent<Player>() == null)
-    //            {
-    //                return;
-    //            }
-    //            target.OnHeal(cardData.Amount);
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
-
     public void OnSelect(BaseEventData eventData)
     {
         HandCard.Instance.selectedCard = this;
@@ -110,5 +50,28 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
     {
         gameObject.transform.position = prevPosition;
         IsSelected = false;
+    }
+
+    public void SetCardData(CardData data)
+    {
+        cardData = data;
+        foreach (var item in button.GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            switch (item.gameObject.name)
+            {
+                case "Name":
+                    item.text = $"{cardData.Name}";
+                    break;
+                case "Description":
+                    item.text = cardData.GetDescription();
+                    break;
+                case "Coast":
+                    item.text = cardData.Coast.ToString();
+                    break;
+                case "Summary":
+                    item.text = $"{cardData.Type} / {cardData.Amount}";
+                    break;
+            }
+        }
     }
 }

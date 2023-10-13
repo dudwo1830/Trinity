@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,6 +10,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
     public GameObject gameoverUI;
+    public GameObject usedCardListUI;
+    public GameObject allCardListUI;
 
     private GameObject winUI;
     private GameObject loseUI;
@@ -42,6 +46,8 @@ public class UIManager : MonoBehaviour
         winUI.SetActive(false);
         loseUI.SetActive(false);
         gameoverUI.SetActive(false);
+        allCardListUI.SetActive(false);
+        usedCardListUI.SetActive(false);
     }
 
     public void SetActiveGameoverUI(bool active, BattleState state)
@@ -61,26 +67,16 @@ public class UIManager : MonoBehaviour
                 return;
         }
     }
-    //private void SetWinUI()
-    //{
-    //    var titleGO = GameObject.FindGameObjectWithTag("GameoverTitle").GetComponent<TextMeshProUGUI>();
-    //    titleGO.text = "Win";
-    //    var buttonGO = GameObject.FindGameObjectWithTag("GameoverButton");
-    //    buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = "Next Battle";
-    //}
-    //private void SetLoseUI()
-    //{
-    //    var titleGO = GameObject.FindGameObjectWithTag("GameoverTitle").GetComponentInChildren<TextMeshProUGUI>();
-    //    titleGO.text = "Lose";
-    //    var buttonGO = GameObject.FindGameObjectWithTag("GameoverButton");
-    //    buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = "Restart";
-    //    buttonGO.GetComponent<Button>().onClick.RemoveAllListeners();
-    //    buttonGO.GetComponent<Button>().onClick.AddListener(() =>
-    //    {
-    //        GameRestart();
-    //        gameoverUI.SetActive(false);
-    //    });
-    //}
+
+    public void SetActiveAllCardListUI(bool active)
+    {
+        allCardListUI.SetActive(active);
+    }
+
+    public void SetActiveUsedCardListUI(bool active)
+    {
+        usedCardListUI.SetActive(active);
+    }    
 
     public void GameRestart()
     {
