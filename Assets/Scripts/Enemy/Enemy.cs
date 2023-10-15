@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,11 +17,16 @@ public class Enemy : LivingEntity
     public TextMeshProUGUI actionTextUI;
     private CardData action;
 
+    List<float> hpList = new List<float>()
+    {
+        20, 30, 40, 50
+    };
+
     private void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
         enemyAudioSource = GetComponent<AudioSource>();
-        Setup(20);
+        Setup(hpList[Random.Range(0, hpList.Count)]);
     }
 
     public void Setup(float health, float damage = 0, float speed = 0, float attackRate = 0)
@@ -77,7 +83,7 @@ public class Enemy : LivingEntity
             case CardData.CardType.Attack:
                 target.OnDamage(action.Amount, Vector3.zero, Vector3.zero);
                 break;
-            case CardData.CardType.Defense:
+            case CardData.CardType.Skill:
                 AddShield(action.Amount);
                 break;
             case CardData.CardType.Heal:

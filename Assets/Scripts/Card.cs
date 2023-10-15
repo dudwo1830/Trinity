@@ -62,6 +62,11 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
     public void SetCardData(CardData data)
     {
         cardData = data;
+        UpdateData();
+    }
+
+    public void UpdateData()
+    {
         foreach (var item in GetComponentsInChildren<TextMeshProUGUI>())
         {
             switch (item.gameObject.name)
@@ -80,5 +85,11 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
                     break;
             }
         }
+    }
+
+    public void LevelUp()
+    {
+        cardData.LevelUp();
+        UpdateData();
     }
 }

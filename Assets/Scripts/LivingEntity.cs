@@ -94,4 +94,9 @@ public class LivingEntity : MonoBehaviour, IDamageable
             shieldUI.gameObject.SetActive(false);
         }
     }
+
+    public virtual void UpdateConditions()
+    {
+        conditions.ForEach(condition => condition.duration = Mathf.Clamp(--condition.duration, 0, 99));
+    }
 }

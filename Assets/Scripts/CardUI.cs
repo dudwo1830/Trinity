@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,6 +11,16 @@ public class CardUI : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI coastText;
+    private Button button;
+    public event Action onClickEvent;
+
+    private void Awake()
+    {
+        button = GetComponent<Button>();
+        button.onClick.AddListener(() => {
+            OnClick();
+        });
+    }
 
     public void SetCardData(CardData data)
     {
@@ -22,5 +33,13 @@ public class CardUI : MonoBehaviour
         nameText.text = cardData.Name;
         descriptionText.text = cardData.GetDescription();
         coastText.text = cardData.Coast.ToString();
+    }
+
+    public void OnClick()
+    {
+        if (onClickEvent != null)
+        {
+            onClickEvent();
+        }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -5,7 +7,7 @@ public class CardData
 {
     public enum CardType
     {
-        None, Attack, Defense, Heal
+        None, Attack, Skill, Heal
     }
 
     public int Id { get; set; }
@@ -16,6 +18,8 @@ public class CardData
     public int MaxLevel { get; set; }
     public float UpgradeAmount { get; set; }
     public int Coast { get; set; }
+
+    public List<Dictionary<string, int>> conditionInfo;
 
     public float defaultAmount;
     public int level;
@@ -42,12 +46,18 @@ public class CardData
     public string GetDescription()
     {
         string newStr = Description;
-        return newStr.Replace("{{Amount}}", Amount.ToString());
+
+        return newStr.Replace("{{Amount}}", Amount.ToString()).Replace("{{ConditionDuration}}", "¹Ì±¸Çö");
     }
 
     public void LevelUp()
     {
+        if (level == MaxLevel)
+        {
+            return;
+        }
         ++level;
+        Name += "+";
         Amount += UpgradeAmount;
     }
 

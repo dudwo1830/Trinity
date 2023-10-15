@@ -134,7 +134,7 @@ public class Player : LivingEntity
                 }
                 enemy.OnDamage(HandCard.Instance.selectedCard.cardData.Amount, Vector3.zero, Vector3.zero);
                 break;
-            case CardData.CardType.Defense:
+            case CardData.CardType.Skill:
                 AddShield(HandCard.Instance.selectedCard.cardData.Amount);
                 break;
             case CardData.CardType.Heal:

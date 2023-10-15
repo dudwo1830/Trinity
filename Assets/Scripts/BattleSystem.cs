@@ -51,7 +51,6 @@ public class BattleSystem : MonoBehaviour
 
     private void Start()
     {
-
     }
 
     private void Update()
@@ -64,10 +63,10 @@ public class BattleSystem : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.F1) && state == BattleState.NONE)
-        {
-            SetupBattle();
-        }
+        //if (Input.GetKeyDown(KeyCode.F1) && state == BattleState.NONE)
+        //{
+        //    SetupBattle();
+        //}
     }
 
     private void FindEnemy(Vector2 clickPosition)

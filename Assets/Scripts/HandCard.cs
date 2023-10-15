@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class HandCard : MonoBehaviour
 {
@@ -88,7 +86,7 @@ public class HandCard : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 5; i++)
         {
             AddCard(cardTable.GetDataByName("타격"));
         }
@@ -96,7 +94,11 @@ public class HandCard : MonoBehaviour
         {
             AddCard(cardTable.GetDataByName("수비"));
         }
-
+        for (int i = 0; i < 1; i++)
+        {
+            AddCard(cardTable.GetDataByName("강타"));
+        }
+        BattleSystem.Instance.SetupBattle();
     }
 
     public void Ready()
@@ -125,25 +127,20 @@ public class HandCard : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            DrawCard();
+            AddCard(cardTable.GetDataByName("타격"));
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            AddCard(cardTable.GetDataByName("타격"));
+            AddCard(cardTable.GetDataByName("수비"));
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            AddCard(cardTable.GetDataByName("수비"));
+            AddCard(cardTable.GetDataByName("강타"));
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            handCardList[0].cardData.LevelUp();
-        }
-        //Shuffle
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            Shuffle();
+            selectedCard.LevelUp();
         }
     }
 
@@ -228,9 +225,6 @@ public class HandCard : MonoBehaviour
         selectedCard = null;
         UpdateCardCount();
     }
-
-
-
     private void DeleteCard(int index)
     {
         Destroy(waitCardList[index].gameObject);
