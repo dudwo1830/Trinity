@@ -118,7 +118,6 @@ public class BattleSystem : MonoBehaviour
 
     public void PlayerTurn()
     {
-        Debug.Log("Player Turn");
         player.ResetCoast();
         player.ResetShield();
         turnEndButton.gameObject.SetActive(true);
@@ -129,6 +128,7 @@ public class BattleSystem : MonoBehaviour
         {
             return;
         }
+        HandCard.Instance.TurnEnd();
 
         state = BattleState.ENEMYTURN;
         EnemyTurn();

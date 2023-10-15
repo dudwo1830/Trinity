@@ -20,6 +20,25 @@ public class CardData
     public float defaultAmount;
     public int level;
 
+    public CardData()
+    {
+
+    }
+
+    public CardData(CardData data)
+    {
+        Id = data.Id;
+        Name = data.Name;
+        Description = data.Description;
+        Amount = data.Amount;
+        Type = data.Type;
+        MaxLevel = data.MaxLevel;
+        UpgradeAmount = data.UpgradeAmount;
+        Coast = data.Coast;
+        defaultAmount = data.defaultAmount;
+        level = data.level;
+    }
+
     public string GetDescription()
     {
         string newStr = Description;

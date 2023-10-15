@@ -1,23 +1,31 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class HandCard : MonoBehaviour
 {
     public static HandCard Instance { get; set; }
 
-    public Transform allCardTransform;
-    public Transform usedCardTransform;
-
     public Card cardPrefab;
+    public CardUI CardUIPrefab;
 
-    public List<Card> allCardList = new List<Card>();
+    public RectTransform allCardUITransform;
+    public RectTransform waitCardUITransform;
+    public RectTransform usedCardUITransform;
 
-    private List<Card> cardList = new List<Card>();
-    public TextMeshProUGUI cardCountText;
+    private List<CardUI> allCardListUI = new List<CardUI>();
+    public TextMeshProUGUI allCardCountText;
+
+    private List<Card> waitCardList = new List<Card>();
+    private List<CardUI> waitCardListUI = new List<CardUI>();
+    public TextMeshProUGUI waitCardCountText;
 
     private List<Card> usedCardList = new List<Card>();
+    private List<CardUI> usedCardListUI = new List<CardUI>();
     public TextMeshProUGUI usedCardCountText;
 
     private List<Card> handCardList = new List<Card>();
@@ -41,7 +49,7 @@ public class HandCard : MonoBehaviour
         }
         cardTable = DataTableManager.GetTable<CardTable>();
 
-        cardCountText.GetComponentInParent<Button>().onClick.AddListener(() => 
+        allCardCountText.GetComponentInParent<Button>().onClick.AddListener(() => 
         {
             if (!UIManager.Instance.allCardListUI.activeSelf)
             {
@@ -50,6 +58,18 @@ public class HandCard : MonoBehaviour
             else
             {
                 UIManager.Instance.SetActiveAllCardListUI(false);
+            }
+        });
+
+        waitCardCountText.GetComponentInParent<Button>().onClick.AddListener(() => 
+        {
+            if (!UIManager.Instance.waitCardListUI.activeSelf)
+            {
+                UIManager.Instance.SetActiveWaitCardListUI(true);
+            }
+            else
+            {
+                UIManager.Instance.SetActiveWaitCardListUI(false);
             }
         });
 
@@ -81,20 +101,6 @@ public class HandCard : MonoBehaviour
 
     public void Ready()
     {
-        //for (int i = handCardList.Count - 1; i >= 0; i--)
-        //{
-        //    handCardList[i].gameObject.SetActive(false);
-        //    cardList.Add(handCardList[i]);
-        //    handCardList.RemoveAt(i);
-        //}
-
-        Debug.Log("Player Draw");
-        foreach (var card in handCardList)
-        {
-            card.gameObject.SetActive(false);
-            usedCardList.Add(card);
-        }
-        handCardList.Clear();
         for (int i = 0; i < drawCount; i++)
         {
             DrawCard();
@@ -104,14 +110,14 @@ public class HandCard : MonoBehaviour
     public void Shuffle()
     {
         int random1, random2;
-        for (int i = 0; i < cardList.Count; ++i)
+        for (int i = 0; i < waitCardList.Count; ++i)
         {
-            random1 = Random.Range(0, cardList.Count);
-            random2 = Random.Range(0, cardList.Count);
+            random1 = Random.Range(0, waitCardList.Count);
+            random2 = Random.Range(0, waitCardList.Count);
 
-            var temp = cardList[random1];
-            cardList[random1] = cardList[random2];
-            cardList[random2] = temp;
+            var temp = waitCardList[random1];
+            waitCardList[random1] = waitCardList[random2];
+            waitCardList[random2] = temp;
         }
     }
 
@@ -130,10 +136,9 @@ public class HandCard : MonoBehaviour
             AddCard(cardTable.GetDataByName("수비"));
         }
 
-        //Delete
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            DeleteCard(cardList.Count - 1);
+            handCardList[0].cardData.LevelUp();
         }
         //Shuffle
         if (Input.GetKeyDown(KeyCode.F2))
@@ -144,27 +149,31 @@ public class HandCard : MonoBehaviour
 
     private void AddCard(CardData data)
     {
+        var newData = new CardData(data);
         var card = Instantiate(cardPrefab, handCardTransform);
-        card.SetCardData(data);
+        card.SetCardData(newData);
         card.gameObject.SetActive(false);
-        cardList.Add(card);
-        allCardList.Add(card);
+        waitCardList.Add(card);
+        AddCardUI(newData);
 
         UpdateCardCount();
     }
 
     public void DrawCard()
     {
-        if (cardList.Count == 0)
+        if (waitCardList.Count == 0)
         {
             ResetCard();
         }
 
         //var randomIndex = UnityEngine.Random.Range(0, cardList.Count);
-        var card = cardList[cardList.Count - 1];
+        var card = waitCardList[0];
         card.gameObject.SetActive(true);
+        card.cardStatus = Card.Status.Draw;
         handCardList.Add(card);
-        cardList.Remove(card);
+        waitCardList.Remove(card);
+        DrawCardUI(card);
+
         UpdateCardCount();
     }
 
@@ -172,21 +181,17 @@ public class HandCard : MonoBehaviour
     {
         foreach(var card in usedCardList)
         {
-            cardList.Add(card);
+            card.cardStatus = Card.Status.Wait;
+            waitCardList.Add(card);
         }
         usedCardList.Clear();
+        ResetUI();
         Shuffle();
         UpdateCardCount();
     }
 
     public void ResetAllCard()
     {
-        foreach (var card in usedCardList)
-        {
-            cardList.Add(card);
-        }
-        usedCardList.Clear();
-
         foreach (var card in handCardList)
         {
             card.gameObject.SetActive(false);
@@ -194,6 +199,13 @@ public class HandCard : MonoBehaviour
         }
         handCardList.Clear();
 
+        foreach (var card in usedCardList)
+        {
+            waitCardList.Add(card);
+        }
+        usedCardList.Clear();
+
+        ResetUI();
         Shuffle();
     }
 
@@ -204,29 +216,141 @@ public class HandCard : MonoBehaviour
         {
             return;
         }
-        //var card = handCardList[selectedCardIndex];
-        //selectedCard.CardAction(target);
         if (!player.ActiveCard(target))
         {
             return;
         }
         selectedCard.gameObject.SetActive(false);
+        selectedCard.cardStatus = Card.Status.Used;
         usedCardList.Add(selectedCard);
         handCardList.Remove(selectedCard);
+        UseCardUI();
         selectedCard = null;
         UpdateCardCount();
     }
 
+
+
     private void DeleteCard(int index)
     {
-        Destroy(cardList[index].gameObject);
-        cardList.RemoveAt(index);
+        Destroy(waitCardList[index].gameObject);
+        waitCardList.RemoveAt(index);
         UpdateCardCount();
     }
 
     private void UpdateCardCount()
     {
-        cardCountText.text = cardList.Count.ToString();
-        usedCardCountText.text = usedCardList.Count.ToString();
+        allCardCountText.text = $"모든 카드 / {allCardListUI.Count}";
+        waitCardCountText.text = $"남은 카드 / {waitCardList.Count}";
+        usedCardCountText.text = $"사용한 카드 / {usedCardList.Count}";
+    }
+
+    public void SortByID(ref List<CardUI> list)
+    {
+        list = (from card in list
+                orderby card.cardData.Id
+                orderby card.cardData.level
+                select card
+                ).ToList();
+    }
+
+    public void AddCardUI(CardData data)
+    {
+        //var cardUI = Instantiate(CardUIPrefab, allCardUITransform);
+        //cardUI.cardData = data;
+        //cardUI.SetCardData(cardUI.cardData);
+        //cardUI.gameObject.SetActive(true);
+        //allCardListUI.Add(cardUI);
+        //cardUI = Instantiate(CardUIPrefab, waitCardUITransform);
+        //cardUI.cardData = data;
+        //cardUI.SetCardData(cardUI.cardData);
+        //cardUI.gameObject.SetActive(true);
+        //waitCardListUI.Add(cardUI);
+        //cardUI = Instantiate(CardUIPrefab, usedCardUITransform);
+        //cardUI.cardData = data;
+        //cardUI.SetCardData(cardUI.cardData);
+        //cardUI.gameObject.SetActive(true);
+        //usedCardListUI.Add(cardUI);
+        Transform[] targetTransforms = { allCardUITransform, waitCardUITransform, usedCardUITransform };
+
+        foreach (Transform targetTransform in targetTransforms)
+        {
+            var cardUI = Instantiate(CardUIPrefab, targetTransform);
+            cardUI.cardData = data;
+            cardUI.SetCardData(cardUI.cardData);
+
+            if (targetTransform == allCardUITransform)
+            {
+                cardUI.gameObject.SetActive(true);
+                allCardListUI.Add(cardUI);
+            }
+            else if (targetTransform == waitCardUITransform)
+            {
+                cardUI.gameObject.SetActive(true);
+                waitCardListUI.Add(cardUI);
+            }
+            else if (targetTransform == usedCardUITransform)
+            {
+                cardUI.gameObject.SetActive(false);
+                usedCardListUI.Add(cardUI);
+            }
+        }
+    }
+
+    public void DrawCardUI(Card card)
+    {
+        foreach (var item in waitCardListUI)
+        {
+            if (ReferenceEquals(item.cardData, card.cardData))
+            {
+                item.gameObject.SetActive(false);
+                break;
+            }
+        }
+    }
+
+    public void UseCardUI()
+    {
+        foreach (var item in usedCardListUI)
+        {
+            if (ReferenceEquals(item.cardData, selectedCard.cardData))
+            {
+                item.gameObject.SetActive(true);
+                break;
+            }
+        }
+    }
+
+    public void ResetUI()
+    {
+        foreach(var item in waitCardListUI)
+        {
+            item.gameObject.SetActive(true);
+        }
+        foreach (var item in usedCardListUI)
+        {
+            item.gameObject.SetActive(false);
+        }
+    }
+
+    public void TurnEnd()
+    {
+        foreach (var card in handCardList)
+        {
+            card.gameObject.SetActive(false);
+            usedCardList.Add(card);
+            TurnEndUI(card);
+        }
+        handCardList.Clear();
+    }
+    public void TurnEndUI(Card card)
+    {
+        foreach (var item in usedCardListUI)
+        {
+            if (ReferenceEquals(item.cardData, card.cardData))
+            {
+                item.gameObject.SetActive(true);
+            }
+        }
     }
 }

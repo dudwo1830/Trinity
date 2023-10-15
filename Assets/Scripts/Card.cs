@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,11 +7,17 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
+    public enum Status
+    {
+        None, Wait, Draw, Used, All
+    }
     public CardData cardData;
     private Button button;
     public bool IsSelected { get; private set; }
     public float hoverMovementY = 20f;
     private Vector3 prevPosition;
+    
+    public Status cardStatus = Status.Wait;
 
     private void Awake()
     {
@@ -55,7 +62,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
     public void SetCardData(CardData data)
     {
         cardData = data;
-        foreach (var item in button.GetComponentsInChildren<TextMeshProUGUI>())
+        foreach (var item in GetComponentsInChildren<TextMeshProUGUI>())
         {
             switch (item.gameObject.name)
             {

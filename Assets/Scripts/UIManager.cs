@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Runtime.InteropServices;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,6 +13,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get; private set; }
     public GameObject gameoverUI;
     public GameObject usedCardListUI;
+    public GameObject waitCardListUI;
     public GameObject allCardListUI;
 
     private GameObject winUI;
@@ -48,6 +51,7 @@ public class UIManager : MonoBehaviour
         gameoverUI.SetActive(false);
         allCardListUI.SetActive(false);
         usedCardListUI.SetActive(false);
+        waitCardListUI.SetActive(false);
     }
 
     public void SetActiveGameoverUI(bool active, BattleState state)
@@ -68,9 +72,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetActiveWaitCardListUI(bool active)
+    {
+        waitCardListUI.gameObject.SetActive(active);
+    }
+    
     public void SetActiveAllCardListUI(bool active)
     {
-        allCardListUI.SetActive(active);
+        allCardListUI.gameObject.SetActive(active);
     }
 
     public void SetActiveUsedCardListUI(bool active)
