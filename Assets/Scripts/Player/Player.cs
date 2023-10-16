@@ -44,9 +44,9 @@ public class Player : LivingEntity
     {
     }
 
-    public override void OnHeal(float heal)
+    public override void OnHealByValue(float heal)
     {
-        base.OnHeal(heal);
+        base.OnHealByValue(heal);
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
@@ -138,7 +138,7 @@ public class Player : LivingEntity
                 AddShield(HandCard.Instance.selectedCard.cardData.Amount);
                 break;
             case CardData.CardType.Heal:
-                OnHeal(HandCard.Instance.selectedCard.cardData.Amount);
+                OnHealByValue(HandCard.Instance.selectedCard.cardData.Amount);
                 break;
             default:
                 break;

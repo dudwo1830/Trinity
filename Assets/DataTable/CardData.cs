@@ -1,3 +1,4 @@
+using CsvHelper.Configuration.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,8 +19,14 @@ public class CardData
     public int MaxLevel { get; set; }
     public float UpgradeAmount { get; set; }
     public int Coast { get; set; }
+    public string Conditions { get; set; }
+    public string ConditionDurations { get; set; }
 
-    public List<Dictionary<string, int>> conditionInfo;
+    [BooleanTrueValues("Y")]
+    [BooleanFalseValues("N")]
+    public bool IsAllAble { get; set; } = false;
+
+    public Dictionary<int, int> conditionInfo;
 
     public float defaultAmount;
     public int level;
@@ -39,6 +46,7 @@ public class CardData
         MaxLevel = data.MaxLevel;
         UpgradeAmount = data.UpgradeAmount;
         Coast = data.Coast;
+        conditionInfo = data.conditionInfo;
         defaultAmount = data.defaultAmount;
         level = data.level;
     }

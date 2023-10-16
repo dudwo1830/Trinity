@@ -18,7 +18,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public event Action onDeathEvent;
 
-    public List<Condition> conditions = new List<Condition>();
+    public List<ConditionData> conditions = new List<ConditionData>();
 
     private void Awake()
     {
@@ -33,6 +33,10 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
+        foreach(var condition in conditions)
+        {
+
+        }
         var realDamage = Shield -= damage;
         UpdateShieldText();
 
@@ -48,9 +52,29 @@ public class LivingEntity : MonoBehaviour, IDamageable
         }
     }
 
-    public virtual void OnHeal(float heal)
+    public virtual void AddCondition(int id, int duration)
+    {
+        if (GetConditionById(id) != null)
+        {
+            GetConditionById(id).duration += duration;
+            return;
+        }
+
+        var table = DataTableManager.GetTable<ConditionTable>();
+        var condition = new ConditionData(table.GetDataById(id));
+        condition.duration = duration;
+        conditions.Add(condition);
+    }
+
+    public virtual void OnHealByValue(float heal)
     {
         Health += heal;
+        Health = Mathf.Clamp(Health, 0, startingHealth);
+    }
+    public virtual void OnHealByRate(float healRate)
+    {
+        Health += (startingHealth * healRate);
+        Health = Mathf.Clamp(Health, 0, startingHealth);
     }
 
     public virtual void AddShield(float shield)
@@ -98,5 +122,39 @@ public class LivingEntity : MonoBehaviour, IDamageable
     public virtual void UpdateConditions()
     {
         conditions.ForEach(condition => condition.duration = Mathf.Clamp(--condition.duration, 0, 99));
+    }
+
+    public virtual bool HasConditionById(int id)
+    {
+        foreach (var item in conditions)
+        {
+            if (item.Id == id && item.duration > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public virtual ConditionData GetConditionById(int id)
+    {
+        foreach (var item in conditions)
+        {
+            if (item.Id == id)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public virtual bool HasConditionByName(string name)
+    {
+        foreach (var item in conditions)
+        {
+            if (item.Name == name && item.duration > 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

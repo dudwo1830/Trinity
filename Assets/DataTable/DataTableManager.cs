@@ -14,6 +14,8 @@ public static class DataTableManager
         tables.Add(typeof(StringTable), stringTable);
         var cardTable = new CardTable();
         tables.Add(typeof(CardTable), cardTable);
+        var conditionTable = new ConditionTable();
+        tables.Add(typeof(ConditionTable), conditionTable);
     }
 
     public static T GetTable<T>() where T : DataTable

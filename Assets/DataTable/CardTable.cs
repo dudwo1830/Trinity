@@ -37,15 +37,34 @@ public class CardTable : DataTable
         {
             var config = new CsvConfiguration(CultureInfo.InvariantCulture);
             config.HasHeaderRecord = true;
+            
             var csv = new CsvReader(reader, config);
 
             var records = csv.GetRecords<CardData>();
-
+            
             dic.Clear();
             foreach (var record in records)
             {
                 record.defaultAmount = record.Amount;
                 record.level = 0;
+
+                Debug.Log($"{record.Conditions == string.Empty} / {record.Conditions == ""}");
+
+                if (record.Conditions != string.Empty)
+                {
+                    var conditions = record.Conditions.Split("|");
+                    var durations = record.ConditionDurations.Split("|");
+
+                    record.conditionInfo = new Dictionary<int, int>();
+                    for (int i = 0; i < conditions.Length; i++)
+                    {
+                        int id = int.TryParse(conditions[i], out id) ? id : 0;
+                        int duration = int.TryParse(durations[i], out duration) ? duration : 0;
+
+                        record.conditionInfo.Add(id, duration);
+                    }
+                }
+
                 dic.Add(record.Name, record);
             }
         }

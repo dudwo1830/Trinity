@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     private GameObject winUI;
     private GameObject loseUI;
+
     private void Awake()
     {
         if (Instance == null)

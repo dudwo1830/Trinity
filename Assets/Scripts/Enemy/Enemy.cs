@@ -60,6 +60,7 @@ public class Enemy : LivingEntity
         base.OnDamage(damage, hitPoint, hitNormal);
         UpdateSlider();
     }
+    
 
     public override void Die()
     {
@@ -81,13 +82,22 @@ public class Enemy : LivingEntity
             case CardData.CardType.None:
                 break;
             case CardData.CardType.Attack:
+                //var damage = action.Amount;
+                //if (target.HasConditionById(1))
+                //{
+                //    damage = target.GetConditionById(1).ApplyValue(damage);
+                //}
                 target.OnDamage(action.Amount, Vector3.zero, Vector3.zero);
+                foreach (var info in action.conditionInfo)
+                {
+                    target.AddCondition(info.Key, info.Value);
+                }
                 break;
             case CardData.CardType.Skill:
                 AddShield(action.Amount);
                 break;
             case CardData.CardType.Heal:
-                OnHeal(action.Amount);
+                OnHealByValue(action.Amount);
                 break;
             default:
                 break;

@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class HandCard : MonoBehaviour
 {
@@ -166,7 +168,6 @@ public class HandCard : MonoBehaviour
         //var randomIndex = UnityEngine.Random.Range(0, cardList.Count);
         var card = waitCardList[0];
         card.gameObject.SetActive(true);
-        card.cardStatus = Card.Status.Draw;
         handCardList.Add(card);
         waitCardList.Remove(card);
         DrawCardUI(card);
@@ -178,7 +179,6 @@ public class HandCard : MonoBehaviour
     {
         foreach(var card in usedCardList)
         {
-            card.cardStatus = Card.Status.Wait;
             waitCardList.Add(card);
         }
         usedCardList.Clear();
@@ -204,6 +204,8 @@ public class HandCard : MonoBehaviour
 
         ResetUI();
         Shuffle();
+
+        UpdateCardCount();
     }
 
     public void UseCard(LivingEntity target)
@@ -218,7 +220,6 @@ public class HandCard : MonoBehaviour
             return;
         }
         selectedCard.gameObject.SetActive(false);
-        selectedCard.cardStatus = Card.Status.Used;
         usedCardList.Add(selectedCard);
         handCardList.Remove(selectedCard);
         UseCardUI();

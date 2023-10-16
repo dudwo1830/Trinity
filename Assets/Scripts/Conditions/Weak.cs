@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 public class Weak : Condition
 {
-    private float amount = 0.25f;
-
-    public float ApplyValue(float damage)
+    public override float FinalValue(float damage)
     {
-        return damage - (damage * amount);
+        return damage - (damage * Coeff);
     }
 }
