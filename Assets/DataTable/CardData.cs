@@ -2,6 +2,7 @@ using CsvHelper.Configuration.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 
 public class CardData
@@ -21,6 +22,9 @@ public class CardData
     public int Coast { get; set; }
     public string Conditions { get; set; }
     public string ConditionDurations { get; set; }
+
+    [Default(0)] 
+    public int UpgradeConditionDuration { get; set; }
 
     [BooleanTrueValues("Y")]
     [BooleanFalseValues("N")]
@@ -47,15 +51,27 @@ public class CardData
         UpgradeAmount = data.UpgradeAmount;
         Coast = data.Coast;
         conditionInfo = data.conditionInfo;
+        UpgradeConditionDuration = data.UpgradeConditionDuration;
         defaultAmount = data.defaultAmount;
         level = data.level;
     }
 
     public string GetDescription()
     {
-        string newStr = Description;
-
-        return newStr.Replace("{{Amount}}", Amount.ToString()).Replace("{{ConditionDuration}}", "¹Ì±¸Çö");
+        var newStr = Description.Replace("{{Amount}}", Amount.ToString());
+        //for (int i = 1; i <= conditionInfo.Count; i++)
+        //{
+        //    var dic = conditionInfo.ElementAt(i);
+        //    newStr = newStr.Replace($"{{ConditionDuration{dic.Key}}}", dic.Value.ToString());
+        //}
+        if (conditionInfo != null)
+        {
+            foreach (var dic in conditionInfo)
+            {
+                newStr = newStr.Replace($"{{ConditionDuration{dic.Key}}}", dic.Value.ToString());
+            }
+        }
+        return newStr;
     }
 
     public void LevelUp()
@@ -67,6 +83,10 @@ public class CardData
         ++level;
         Name += "+";
         Amount += UpgradeAmount;
+        foreach (var dic in conditionInfo)
+        {
+            conditionInfo[dic.Key] += UpgradeConditionDuration;
+        }
     }
 
     public void LevelDown()

@@ -19,7 +19,6 @@ public class LivingEntity : MonoBehaviour, IDamageable
     public event Action onDeathEvent;
 
     public List<ConditionData> conditions = new List<ConditionData>();
-
     private void Awake()
     {
         shieldUI.gameObject.SetActive(false);
@@ -29,13 +28,18 @@ public class LivingEntity : MonoBehaviour, IDamageable
     {
         Dead = false;
         Health = startingHealth;
+        conditions = DataTableManager.GetTable<ConditionTable>().ToList();
+        foreach (var item in conditions)
+        {
+            Debug.Log($"{item.Name} / {item.duration}");
+        }
     }
 
     public virtual void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        foreach(var condition in conditions)
+        if (HasConditionById(1))
         {
-
+            damage = GetConditionById(1).ApplyValue(damage);
         }
         var realDamage = Shield -= damage;
         UpdateShieldText();
@@ -54,6 +58,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual void AddCondition(int id, int duration)
     {
+        Debug.Log("상태이상");
         if (GetConditionById(id) != null)
         {
             GetConditionById(id).duration += duration;

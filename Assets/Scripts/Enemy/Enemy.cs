@@ -88,9 +88,12 @@ public class Enemy : LivingEntity
                 //    damage = target.GetConditionById(1).ApplyValue(damage);
                 //}
                 target.OnDamage(action.Amount, Vector3.zero, Vector3.zero);
-                foreach (var info in action.conditionInfo)
+                if (action.conditionInfo != null)
                 {
-                    target.AddCondition(info.Key, info.Value);
+                    foreach (var info in action.conditionInfo)
+                    {
+                        target.AddCondition(info.Key, info.Value);
+                    }
                 }
                 break;
             case CardData.CardType.Skill:
