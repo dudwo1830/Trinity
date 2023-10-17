@@ -48,8 +48,6 @@ public class CardTable : DataTable
                 record.defaultAmount = record.Amount;
                 record.level = 0;
 
-                Debug.Log($"{record.Conditions == string.Empty} / {record.Conditions == ""}");
-
                 if (record.Conditions != string.Empty)
                 {
                     var conditions = record.Conditions.Split("|");

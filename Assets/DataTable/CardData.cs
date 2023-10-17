@@ -1,9 +1,5 @@
 using CsvHelper.Configuration.Attributes;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using UnityEngine;
 
 public class CardData
 {
@@ -26,9 +22,9 @@ public class CardData
     [Default(0)] 
     public int UpgradeConditionDuration { get; set; }
 
-    [BooleanTrueValues("Y")]
-    [BooleanFalseValues("N")]
-    public bool IsAllAble { get; set; } = false;
+    [BooleanTrueValues("Y", "y")]
+    [BooleanFalseValues("N", "n")]
+    public bool IsAllAble { get; set; }
 
     public Dictionary<int, int> conditionInfo;
 
@@ -68,7 +64,7 @@ public class CardData
         {
             foreach (var dic in conditionInfo)
             {
-                newStr = newStr.Replace($"{{ConditionDuration{dic.Key}}}", dic.Value.ToString());
+                newStr = newStr.Replace("{{ConditionDuration"+dic.Key+"}}", dic.Value.ToString());
             }
         }
         return newStr;

@@ -19,6 +19,8 @@ public class LivingEntity : MonoBehaviour, IDamageable
     public event Action onDeathEvent;
 
     public List<ConditionData> conditions = new List<ConditionData>();
+    public Transform conditionsTransform;
+
     private void Awake()
     {
         shieldUI.gameObject.SetActive(false);
@@ -28,10 +30,10 @@ public class LivingEntity : MonoBehaviour, IDamageable
     {
         Dead = false;
         Health = startingHealth;
-        conditions = DataTableManager.GetTable<ConditionTable>().ToList();
-        foreach (var item in conditions)
+        var table = DataTableManager.GetTable<ConditionTable>().ToList();
+        foreach (var item in table)
         {
-            Debug.Log($"{item.Name} / {item.duration}");
+            conditions.Add(new ConditionData(item));
         }
     }
 
@@ -41,6 +43,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         {
             damage = GetConditionById(1).ApplyValue(damage);
         }
+        Debug.Log($"최종 데미지: {damage}");
         var realDamage = Shield -= damage;
         UpdateShieldText();
 
@@ -58,17 +61,8 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual void AddCondition(int id, int duration)
     {
-        Debug.Log("상태이상");
-        if (GetConditionById(id) != null)
-        {
-            GetConditionById(id).duration += duration;
-            return;
-        }
-
-        var table = DataTableManager.GetTable<ConditionTable>();
-        var condition = new ConditionData(table.GetDataById(id));
-        condition.duration = duration;
-        conditions.Add(condition);
+        GetConditionById(id).duration += duration;
+        UpdateConditionUI();
     }
 
     public virtual void OnHealByValue(float heal)
@@ -126,7 +120,28 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual void UpdateConditions()
     {
-        conditions.ForEach(condition => condition.duration = Mathf.Clamp(--condition.duration, 0, 99));
+        conditions.ForEach(condition =>
+        {
+            condition.duration = Mathf.Clamp(--condition.duration, 0, 99);
+        });
+        UpdateConditionUI();
+    }
+
+    public virtual void UpdateConditionUI()
+    {
+        for (int i = 0; i < conditions.Count; i++)
+        {
+            var condition = conditions[i];
+            if (condition.duration <= 0)
+            {
+                conditionsTransform.GetChild(i).gameObject.SetActive(false);
+            }
+            else
+            {
+                conditionsTransform.GetChild(i).gameObject.SetActive(true);
+                conditionsTransform.GetChild(i).gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"{condition.Name} / {condition.duration}";
+            }
+        }
     }
 
     public virtual bool HasConditionById(int id)

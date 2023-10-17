@@ -16,7 +16,7 @@ public class Enemy : LivingEntity
 
     public TextMeshProUGUI actionTextUI;
     private CardData action;
-
+    private Card newAction;
     List<float> hpList = new List<float>()
     {
         20, 30, 40, 50
@@ -41,7 +41,6 @@ public class Enemy : LivingEntity
         UpdateSlider();
         onDeathEvent += () => {
             BattleSystem.Instance.battleEnemyList.Remove(this);
-            Debug.Log(BattleSystem.Instance.battleEnemyList.Count);
             Destroy(gameObject);
             if (BattleSystem.Instance.battleEnemyList.Count <= 0)
             {
@@ -82,12 +81,12 @@ public class Enemy : LivingEntity
             case CardData.CardType.None:
                 break;
             case CardData.CardType.Attack:
-                //var damage = action.Amount;
-                //if (target.HasConditionById(1))
-                //{
-                //    damage = target.GetConditionById(1).ApplyValue(damage);
-                //}
-                target.OnDamage(action.Amount, Vector3.zero, Vector3.zero);
+                var damage = action.Amount;
+                if (HasConditionById(2))
+                {
+                    damage = target.GetConditionById(2).ApplyValue(damage);
+                }
+                target.OnDamage(damage, Vector3.zero, Vector3.zero);
                 if (action.conditionInfo != null)
                 {
                     foreach (var info in action.conditionInfo)

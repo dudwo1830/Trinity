@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Collections.Specialized.BitVector32;
 using static UnityEngine.GraphicsBuffer;
 
 public class Player : LivingEntity
@@ -115,7 +116,7 @@ public class Player : LivingEntity
         coastText.text = $"{currentCoast}/{maxCoast}";
     }
 
-    public bool CanUseCard(LivingEntity entity)
+    public bool CanUseCard()
     {
         return HandCard.Instance.selectedCard != null && currentCoast >= HandCard.Instance.selectedCard.cardData.Coast; 
     }
@@ -123,6 +124,7 @@ public class Player : LivingEntity
     public bool ActiveCard(LivingEntity entity)
     {
         var enemy = entity.GetComponentInParent<Enemy>();
+        var cardData = HandCard.Instance.selectedCard.cardData;
         switch (HandCard.Instance.selectedCard.cardData.Type)
         {
             case CardData.CardType.None:
@@ -132,13 +134,29 @@ public class Player : LivingEntity
                 {
                     return false;
                 }
-                enemy.OnDamage(HandCard.Instance.selectedCard.cardData.Amount, Vector3.zero, Vector3.zero);
+                var damage = cardData.Amount;
+                if (HasConditionById(2))
+                {
+                    damage = GetConditionById(2).ApplyValue(damage);
+                }
+                enemy.OnDamage(damage, Vector3.zero, Vector3.zero);
+                if (cardData.conditionInfo != null)
+                {
+                    foreach (var info in cardData.conditionInfo)
+                    {
+                        enemy.AddCondition(info.Key, info.Value);
+                    }
+                }
                 break;
             case CardData.CardType.Skill:
-                AddShield(HandCard.Instance.selectedCard.cardData.Amount);
+                if (!(entity is LivingEntity))
+                {
+                    return false;
+                }
+                AddShield(cardData.Amount);
                 break;
             case CardData.CardType.Heal:
-                OnHealByValue(HandCard.Instance.selectedCard.cardData.Amount);
+                OnHealByValue(cardData.Amount);
                 break;
             default:
                 break;

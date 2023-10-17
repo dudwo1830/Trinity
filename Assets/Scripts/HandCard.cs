@@ -90,11 +90,11 @@ public class HandCard : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            AddCard(cardTable.GetDataByName("타격"));
+            AddCard(cardTable.GetDataByName("어퍼컷"));
         }
         for (int i = 0; i < 4; i++)
         {
-            AddCard(cardTable.GetDataByName("수비"));
+            AddCard(cardTable.GetDataByName("타격"));
         }
         for (int i = 0; i < 1; i++)
         {
@@ -137,10 +137,17 @@ public class HandCard : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            AddCard(cardTable.GetDataByName("강타"));
+            AddCard(cardTable.GetDataByName("절단"));
         }
-
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            GameObject.FindWithTag("Player").GetComponent<LivingEntity>().AddCondition(1,1);
+        }
         if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            GameObject.FindWithTag("Player").GetComponent<LivingEntity>().AddCondition(2,1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             selectedCard.LevelUp();
         }
@@ -211,7 +218,7 @@ public class HandCard : MonoBehaviour
     public void UseCard(LivingEntity target)
     {
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        if (!player.CanUseCard(target))
+        if (!player.CanUseCard())
         {
             return;
         }

@@ -77,7 +77,17 @@ public class BattleSystem : MonoBehaviour
             var gameObject = hit.collider.gameObject;
             if (gameObject.GetComponent<LivingEntity>() != null)
             {
-                HandCard.Instance.UseCard(gameObject.GetComponent<LivingEntity>());
+                if (HandCard.Instance.selectedCard.cardData.IsAllAble)
+                {
+                    foreach (var enemy in battleEnemyList)
+                    {
+                        HandCard.Instance.UseCard(enemy);
+                    }
+                }
+                else
+                {
+                    HandCard.Instance.UseCard(gameObject.GetComponent<LivingEntity>());
+                }
             }
         }
     }
@@ -100,6 +110,7 @@ public class BattleSystem : MonoBehaviour
     public void Draw()
     {
         HandCard.Instance.Ready();
+        player.UpdateConditions();
         state = BattleState.ENEMYREADY;
         EnemyReady();
     }
@@ -110,6 +121,7 @@ public class BattleSystem : MonoBehaviour
         foreach (var enemy in battleEnemyList)
         {
             enemy.SetAction(cardTable.GetRandomData());
+            enemy.UpdateConditions();
         }
         state = BattleState.PLAYERTURN;
         PlayerTurn();
@@ -128,7 +140,6 @@ public class BattleSystem : MonoBehaviour
             return;
         }
         HandCard.Instance.TurnEnd();
-
         state = BattleState.ENEMYTURN;
         EnemyTurn();
     }

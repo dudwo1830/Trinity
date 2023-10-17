@@ -32,4 +32,9 @@
         }
         return amount;
     }
+
+    public override string ToString()
+    {
+        return $"Name: {Name}, Duration: {duration}";
+    }
 }
