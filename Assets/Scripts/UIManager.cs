@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using TMPro;
 using Unity.VisualScripting;
@@ -36,16 +37,77 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        winUI.GetComponentInChildren<Button>().onClick.AddListener(() =>
+        var winButtons = winUI.GetComponentsInChildren<Button>();
+        foreach (var button in winButtons) 
         {
-            BattleSystem.Instance.SetupBattle();
-            gameoverUI.SetActive(false);
-        });
-        loseUI.GetComponentInChildren<Button>().onClick.AddListener(() =>
+            switch (button.gameObject.name)
+            {
+                case "NextBattleButton":
+                    button.onClick.AddListener(() =>
+                    {
+                        BattleSystem.Instance.SetupBattle();
+                        gameoverUI.SetActive(false);
+                    });
+                    break;
+                case "AddCardButton":
+                    button.onClick.AddListener(() =>
+                    {
+                        HandCard.Instance.AddRandomCard();
+                        BattleSystem.Instance.SetupBattle();
+                        gameoverUI.SetActive(false);
+                    });
+                    break;
+                case "OnHealButton":
+                    button.onClick.AddListener(() =>
+                    {
+                        BattleSystem.Instance.player.OnHealByRate(0.3f);
+                        BattleSystem.Instance.SetupBattle();
+                        gameoverUI.SetActive(false);
+                    });
+                    break;
+                case "EnforceCardButton":
+                    button.onClick.AddListener(() =>
+                    {
+                        //ToDo
+                        HandCard.Instance.EnforceRandomCard();
+                        BattleSystem.Instance.SetupBattle();
+                        gameoverUI.SetActive(false);
+                    });
+                    break;
+                case "DeleteCardButton":
+                    button.onClick.AddListener(() =>
+                    {
+                        HandCard.Instance.DeleteRandomCard();
+                        BattleSystem.Instance.SetupBattle();
+                        gameoverUI.SetActive(false);
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+        var loseButtons = loseUI.GetComponentsInChildren<Button>();
+        foreach (var button in loseButtons)
         {
-            GameRestart();
-            gameoverUI.SetActive(false);
-        });
+            switch (button.gameObject.name)
+            {
+                case "RestartButton":
+                    button.onClick.AddListener(() =>
+                    {
+                        GameRestart();
+                        gameoverUI.SetActive(false);
+                    });
+                    break;
+                case "QuitButton":
+                    button.onClick.AddListener(() =>
+                    {
+                        Application.Quit();
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
 
         winUI.SetActive(false);
         loseUI.SetActive(false);

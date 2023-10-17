@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Xsl;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,11 +91,12 @@ public class HandCard : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            AddCard(cardTable.GetDataByName("¾îÆÛÄÆ"));
+            AddCard(cardTable.GetDataByName("¸ùµÕÀÌÁú"));
+            //AddCard(cardTable.GetDataByName("Å¸°Ý"));
         }
         for (int i = 0; i < 4; i++)
         {
-            AddCard(cardTable.GetDataByName("Å¸°Ý"));
+            AddCard(cardTable.GetDataByName("¼öºñ"));
         }
         for (int i = 0; i < 1; i++)
         {
@@ -137,7 +139,7 @@ public class HandCard : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            AddCard(cardTable.GetDataByName("Àý´Ü"));
+            AddCard(cardTable.GetDataByName("¸ùµÕÀÌÁú"));
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
@@ -149,7 +151,11 @@ public class HandCard : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            selectedCard.LevelUp();
+            BattleSystem.Instance.player.OnHealByRate(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            DeleteRandomCard();
         }
     }
 
@@ -238,6 +244,24 @@ public class HandCard : MonoBehaviour
         Destroy(waitCardList[index].gameObject);
         waitCardList.RemoveAt(index);
         UpdateCardCount();
+    }
+
+    public void DeleteCardUI(CardData data)
+    {
+        List<CardUI>[] uiArray = { allCardListUI, waitCardListUI, usedCardListUI };
+
+        for (int i = 0; i < uiArray.Length; i++)
+        {
+            var list = uiArray[i];
+            for (int j = list.Count - 1; 0 <= j; j--)
+            {
+                if (ReferenceEquals(list[j].cardData, data))
+                {
+                    Destroy(list[j].gameObject);
+                    list.RemoveAt(j);
+                }
+            }
+        }
     }
 
     private void UpdateCardCount()
@@ -353,6 +377,56 @@ public class HandCard : MonoBehaviour
             {
                 item.gameObject.SetActive(true);
             }
+        }
+    }
+
+    public void DeleteRandomCard()
+    {
+        var random = Random.Range(0, waitCardList.Count);
+        var card = waitCardList[random];
+
+        DeleteCardUI(card.cardData);
+        Destroy(card.gameObject);
+        waitCardList.Remove(card);
+
+        UpdateCardCount();
+    }
+
+    public void AddRandomCard()
+    {
+        int minDrawCount = 1, maxDrawCount = 2;
+        int random;
+        var table = DataTableManager.GetTable<CardTable>();
+        var maxCardCount = table.ToList().Count;
+        var addCount = Random.Range(minDrawCount, maxDrawCount + 1);
+
+        for (int i = 0; i < addCount; i++)
+        {
+            random = Random.Range(1, maxCardCount+1);
+            AddCard(table.GetDataById(random));
+        }
+    }
+
+    public void EnforceRandomCard()
+    {
+        EnforceCard();
+        List<CardUI>[] uiArr = { allCardListUI, waitCardListUI, usedCardListUI };
+
+        foreach (var list in uiArr)
+        {
+            foreach (var cardUI in list)
+            {
+                cardUI.UpdateCardUI();
+            }
+        }
+    }
+
+    public void EnforceCard()
+    {
+        int random = Random.Range(0, waitCardList.Count);
+        if (!waitCardList[random].LevelUp())
+        {
+            EnforceCard();
         }
     }
 }

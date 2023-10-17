@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,21 +18,33 @@ public class Enemy : LivingEntity
     public TextMeshProUGUI actionTextUI;
     private CardData action;
     private Card newAction;
+    
     List<float> hpList = new List<float>()
     {
         20, 30, 40, 50
     };
 
+    private EnemyData enemyData;
+
     private void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
         enemyAudioSource = GetComponent<AudioSource>();
-        Setup(hpList[Random.Range(0, hpList.Count)]);
+
+        //Setup(hpList[Random.Range(0, hpList.Count)]);
+        Setup(DataTableManager.GetTable<EnemyTable>().GetRandomData());
     }
 
     public void Setup(float health, float damage = 0, float speed = 0, float attackRate = 0)
     {
         startingHealth = health;
+        healthSlider.minValue = 0f;
+        healthSlider.maxValue = startingHealth;
+    }
+    public void Setup(EnemyData data)
+    {
+        enemyData = data;
+        startingHealth = enemyData.StartingHealth;
         healthSlider.minValue = 0f;
         healthSlider.maxValue = startingHealth;
     }
@@ -65,13 +78,19 @@ public class Enemy : LivingEntity
     {
         Debug.Log("Enemy Die");
         base.Die();
-        
     }
 
     public void SetAction(CardData data)
     {
         action = data;
-        SetActionText($"{action.Name} / {action.Amount}");
+        SetActionText();
+    }
+
+    public void SetAction()
+    {
+        var randomId = Random.Range(enemyData.useCardIdList.Min(), enemyData.useCardIdList.Max() + 1);
+        action = DataTableManager.GetTable<CardTable>().GetDataById(randomId);
+        SetActionText();
     }
 
     public void EnemyAction(LivingEntity target)
@@ -106,15 +125,22 @@ public class Enemy : LivingEntity
         }
     }
 
-    public void SetActionText(string text)
+    public void SetActionText()
     {
-        if (text == string.Empty || text == null)
+        var actionText = action.Type switch
+        {
+            CardData.CardType.Attack => $"공격/{action.Amount}",
+            CardData.CardType.Skill => "방어",
+            _ => ""
+        };
+
+        if (actionText == string.Empty || actionText == null)
         {
             actionTextUI.text = string.Empty;
         }
         else
         {
-            actionTextUI.text = text;
+            actionTextUI.text = actionText;
         }
     }
 

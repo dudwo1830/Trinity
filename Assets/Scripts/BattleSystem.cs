@@ -120,7 +120,8 @@ public class BattleSystem : MonoBehaviour
         var cardTable = DataTableManager.GetTable<CardTable>();
         foreach (var enemy in battleEnemyList)
         {
-            enemy.SetAction(cardTable.GetRandomData());
+            //enemy.SetAction(cardTable.GetRandomData());
+            enemy.SetAction();
             enemy.UpdateConditions();
         }
         state = BattleState.PLAYERTURN;
@@ -173,6 +174,7 @@ public class BattleSystem : MonoBehaviour
     public void Win()
     {
         state = BattleState.WIN;
+        HandCard.Instance.ResetAllCard();
         UIManager.Instance.SetActiveGameoverUI(true, state);
     }
 

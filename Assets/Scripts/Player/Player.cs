@@ -48,6 +48,12 @@ public class Player : LivingEntity
     public override void OnHealByValue(float heal)
     {
         base.OnHealByValue(heal);
+        UpdateSlider();
+    }
+    public override void OnHealByRate(float healRate)
+    {
+        base.OnHealByRate(healRate);
+        UpdateSlider();
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
@@ -75,6 +81,7 @@ public class Player : LivingEntity
     public override void Revive(float heal = 50f)
     {
         base.Revive(heal);
+        UpdateSlider();
     }
 
     //IEnumerator HitEffect(float duration)

@@ -43,12 +43,13 @@ public class EnemyTable : DataTable
             dic.Clear();
             foreach (var record in records)
             {
-                dic.Add(record.Name, record);
-                var arr = record.CardListPlainText.Split("|");
+                var arr = record.ActionListText.Split("|");
                 foreach (var item in arr)
                 {
-                    record.usingCardList.Add(DataTableManager.GetTable<CardTable>().GetDataById(int.Parse(item)));
+                    record.useCardIdList.Add(int.Parse(item));
                 }
+                Debug.Log(record.ToString());
+                dic.Add(record.Name, record);
             }
         }
 

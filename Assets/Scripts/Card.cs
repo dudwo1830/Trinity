@@ -87,9 +87,13 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
         }
     }
 
-    public void LevelUp()
+    public bool LevelUp()
     {
-        cardData.LevelUp();
-        UpdateData();
+        var result = cardData.LevelUp();
+        if (result)
+        {
+            UpdateData();
+        }
+        return result;
     }
 }

@@ -1,5 +1,6 @@
 using CsvHelper.Configuration.Attributes;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class CardData
 {
@@ -55,11 +56,6 @@ public class CardData
     public string GetDescription()
     {
         var newStr = Description.Replace("{{Amount}}", Amount.ToString());
-        //for (int i = 1; i <= conditionInfo.Count; i++)
-        //{
-        //    var dic = conditionInfo.ElementAt(i);
-        //    newStr = newStr.Replace($"{{ConditionDuration{dic.Key}}}", dic.Value.ToString());
-        //}
         if (conditionInfo != null)
         {
             foreach (var dic in conditionInfo)
@@ -70,19 +66,23 @@ public class CardData
         return newStr;
     }
 
-    public void LevelUp()
+    public bool LevelUp()
     {
         if (level == MaxLevel)
         {
-            return;
+            return false;
         }
         ++level;
         Name += "+";
         Amount += UpgradeAmount;
-        foreach (var dic in conditionInfo)
+        if (conditionInfo != null)
         {
-            conditionInfo[dic.Key] += UpgradeConditionDuration;
+            foreach (var dic in conditionInfo)
+            {
+                conditionInfo[dic.Key] += UpgradeConditionDuration;
+            }
         }
+        return true;
     }
 
     public void LevelDown()
