@@ -68,7 +68,6 @@ public class UIManager : MonoBehaviour
                 case "EnforceCardButton":
                     button.onClick.AddListener(() =>
                     {
-                        //ToDo
                         HandCard.Instance.EnforceRandomCard();
                         BattleSystem.Instance.SetupBattle();
                         gameoverUI.SetActive(false);

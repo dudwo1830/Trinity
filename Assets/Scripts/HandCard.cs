@@ -155,7 +155,7 @@ public class HandCard : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            DeleteRandomCard();
+            EnforceRandomCard();
         }
     }
 
@@ -407,26 +407,26 @@ public class HandCard : MonoBehaviour
         }
     }
 
-    public void EnforceRandomCard()
+    public void EnforceRandomCard(int count = 0)
     {
-        EnforceCard();
-        List<CardUI>[] uiArr = { allCardListUI, waitCardListUI, usedCardListUI };
+        if (waitCardList.Count == 0)
+        {
+            return;
+        }
+        int limitCount = waitCardList.Count;
+        int random = Random.Range(0, limitCount);
+        if (!waitCardList[random].LevelUp() && count < limitCount)
+        {
+            EnforceRandomCard(++count);
+        }
 
+        List<CardUI>[] uiArr = { allCardListUI, waitCardListUI, usedCardListUI };
         foreach (var list in uiArr)
         {
             foreach (var cardUI in list)
             {
                 cardUI.UpdateCardUI();
             }
-        }
-    }
-
-    public void EnforceCard()
-    {
-        int random = Random.Range(0, waitCardList.Count);
-        if (!waitCardList[random].LevelUp())
-        {
-            EnforceCard();
         }
     }
 }

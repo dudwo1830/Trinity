@@ -1,6 +1,7 @@
 using CsvHelper.Configuration.Attributes;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 public class CardData
 {
@@ -77,9 +78,9 @@ public class CardData
         Amount += UpgradeAmount;
         if (conditionInfo != null)
         {
-            foreach (var dic in conditionInfo)
+            foreach (var key in conditionInfo.Keys.ToList())
             {
-                conditionInfo[dic.Key] += UpgradeConditionDuration;
+                conditionInfo[key] = conditionInfo[key] + UpgradeConditionDuration;
             }
         }
         return true;
