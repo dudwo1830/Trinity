@@ -25,6 +25,7 @@ public class CardUI : MonoBehaviour
     public void SetCardData(CardData data)
     {
         cardData = data;
+        transform.Find("CardImage").GetComponent<Image>().sprite = Resources.Load<Sprite>(cardData.ResourcePath) as Sprite;
         UpdateCardUI();
     }
 

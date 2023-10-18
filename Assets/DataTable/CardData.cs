@@ -11,6 +11,7 @@ public class CardData
     }
 
     public int Id { get; set; }
+    public string ResourcePath { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public float Amount { get; set; }
@@ -41,6 +42,7 @@ public class CardData
     public CardData(CardData data)
     {
         Id = data.Id;
+        ResourcePath = data.ResourcePath;
         Name = data.Name;
         Description = data.Description;
         Amount = data.Amount;

@@ -62,6 +62,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IS
     public void SetCardData(CardData data)
     {
         cardData = data;
+        transform.Find("CardImage").GetComponent<Image>().sprite = Resources.Load<Sprite>(cardData.ResourcePath) as Sprite;
         UpdateData();
     }
 

@@ -139,7 +139,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
             else
             {
                 conditionsTransform.GetChild(i).gameObject.SetActive(true);
-                conditionsTransform.GetChild(i).gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"{condition.Name} / {condition.duration}";
+                conditionsTransform.GetChild(i).gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"{condition.duration}";
             }
         }
     }
