@@ -13,9 +13,9 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
     public GameObject gameoverUI;
-    public GameObject usedCardListUI;
-    public GameObject waitCardListUI;
-    public GameObject allCardListUI;
+
+    public GameObject cardListContainer;
+    public List<GameObject> cardListUIs;
 
     private GameObject winUI;
     private GameObject loseUI;
@@ -45,40 +45,40 @@ public class UIManager : MonoBehaviour
                 case "NextBattleButton":
                     button.onClick.AddListener(() =>
                     {
-                        BattleSystem.Instance.SetupBattle();
                         gameoverUI.SetActive(false);
+                        BattleSystem.Instance.SetupBattle();
                     });
                     break;
                 case "AddCardButton":
                     button.onClick.AddListener(() =>
                     {
                         HandCard.Instance.AddRandomCard();
-                        BattleSystem.Instance.SetupBattle();
                         gameoverUI.SetActive(false);
+                        BattleSystem.Instance.SetupBattle();
                     });
                     break;
                 case "OnHealButton":
                     button.onClick.AddListener(() =>
                     {
                         BattleSystem.Instance.player.OnHealByRate(0.3f);
-                        BattleSystem.Instance.SetupBattle();
                         gameoverUI.SetActive(false);
+                        BattleSystem.Instance.SetupBattle();
                     });
                     break;
                 case "EnforceCardButton":
                     button.onClick.AddListener(() =>
                     {
                         HandCard.Instance.EnforceRandomCard();
-                        BattleSystem.Instance.SetupBattle();
                         gameoverUI.SetActive(false);
+                        BattleSystem.Instance.SetupBattle();
                     });
                     break;
                 case "DeleteCardButton":
                     button.onClick.AddListener(() =>
                     {
                         HandCard.Instance.DeleteRandomCard();
-                        BattleSystem.Instance.SetupBattle();
                         gameoverUI.SetActive(false);
+                        BattleSystem.Instance.SetupBattle();
                     });
                     break;
                 default:
@@ -111,9 +111,8 @@ public class UIManager : MonoBehaviour
         winUI.SetActive(false);
         loseUI.SetActive(false);
         gameoverUI.SetActive(false);
-        allCardListUI.SetActive(false);
-        usedCardListUI.SetActive(false);
-        waitCardListUI.SetActive(false);
+
+        cardListContainer.SetActive(false);
     }
 
     public void SetActiveGameoverUI(bool active, BattleState state)
@@ -134,20 +133,59 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void SetActiveWaitCardListUI(bool active)
+    public void SetActiveWaitCardListUI()
     {
-        waitCardListUI.gameObject.SetActive(active);
-    }
-    
-    public void SetActiveAllCardListUI(bool active)
-    {
-        allCardListUI.gameObject.SetActive(active);
+        bool active = false;
+        cardListUIs.ForEach((cardList) => 
+        {
+            if (cardList.name == "WaitCardList" && !cardList.activeSelf)
+            {
+                active = true;
+                cardList.SetActive(active);
+            }
+            else
+            {
+                cardList.SetActive(false);
+            }
+        });
+        cardListContainer.SetActive(active);
     }
 
-    public void SetActiveUsedCardListUI(bool active)
+    public void SetActiveAllCardListUI()
     {
-        usedCardListUI.SetActive(active);
-    }    
+        bool active = false;
+        cardListUIs.ForEach((cardList) =>
+        {
+            if (cardList.name == "AllCardList" && !cardList.activeSelf)
+            {
+                active = true;
+                cardList.SetActive(active);
+            }
+            else
+            {
+                cardList.SetActive(false);
+            }
+        });
+        cardListContainer.SetActive(active);
+    }
+
+    public void SetActiveUsedCardListUI()
+    {
+        bool active = false;
+        cardListUIs.ForEach((cardList) =>
+        {
+            if (cardList.name == "UsedCardList" && !cardList.activeSelf)
+            {
+                active = true;
+                cardList.SetActive(active);
+            }
+            else
+            {
+                cardList.SetActive(false);
+            }
+        });
+        cardListContainer.SetActive(active);
+    }
 
     public void GameRestart()
     {

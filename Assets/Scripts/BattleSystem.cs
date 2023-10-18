@@ -57,7 +57,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (state == BattleState.PLAYERTURN)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && HandCard.Instance.selectedCard != null)
             {
                 FindEnemy(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             }

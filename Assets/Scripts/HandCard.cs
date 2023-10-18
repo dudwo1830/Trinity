@@ -52,38 +52,17 @@ public class HandCard : MonoBehaviour
 
         allCardCountText.GetComponentInParent<Button>().onClick.AddListener(() => 
         {
-            if (!UIManager.Instance.allCardListUI.activeSelf)
-            {
-                UIManager.Instance.SetActiveAllCardListUI(true);
-            }
-            else
-            {
-                UIManager.Instance.SetActiveAllCardListUI(false);
-            }
+            UIManager.Instance.SetActiveAllCardListUI();
         });
 
         waitCardCountText.GetComponentInParent<Button>().onClick.AddListener(() => 
         {
-            if (!UIManager.Instance.waitCardListUI.activeSelf)
-            {
-                UIManager.Instance.SetActiveWaitCardListUI(true);
-            }
-            else
-            {
-                UIManager.Instance.SetActiveWaitCardListUI(false);
-            }
+             UIManager.Instance.SetActiveWaitCardListUI();
         });
 
         usedCardCountText.GetComponentInParent<Button>().onClick.AddListener(() =>
         {
-            if (!UIManager.Instance.usedCardListUI.activeSelf)
-            {
-                UIManager.Instance.SetActiveUsedCardListUI(true);
-            }
-            else
-            {
-                UIManager.Instance.SetActiveUsedCardListUI(false);
-            }
+             UIManager.Instance.SetActiveUsedCardListUI();
         });
     }
 
@@ -107,6 +86,9 @@ public class HandCard : MonoBehaviour
 
     public void Ready()
     {
+        Debug.Log($"WaitCardCount: {waitCardList.Count}");
+        Debug.Log($"HandCardCount: {handCardList.Count}");
+        Debug.Log($"UsedCardCount: {usedCardList.Count}");
         for (int i = 0; i < drawCount; i++)
         {
             DrawCard();
