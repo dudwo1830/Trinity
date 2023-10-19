@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     public GameObject cardListContainer;
     public List<GameObject> cardListUIs;
 
+    public Image curtain;
+
     private GameObject winUI;
     private GameObject loseUI;
 
@@ -46,6 +48,7 @@ public class UIManager : MonoBehaviour
                     button.onClick.AddListener(() =>
                     {
                         gameoverUI.SetActive(false);
+                        curtain.gameObject.SetActive(false);
                         BattleSystem.Instance.SetupBattle();
                     });
                     break;
@@ -54,6 +57,7 @@ public class UIManager : MonoBehaviour
                     {
                         HandCard.Instance.AddRandomCard();
                         gameoverUI.SetActive(false);
+                        curtain.gameObject.SetActive(false);
                         BattleSystem.Instance.SetupBattle();
                     });
                     break;
@@ -62,6 +66,7 @@ public class UIManager : MonoBehaviour
                     {
                         BattleSystem.Instance.player.OnHealByRate(0.3f);
                         gameoverUI.SetActive(false);
+                        curtain.gameObject.SetActive(false);
                         BattleSystem.Instance.SetupBattle();
                     });
                     break;
@@ -70,6 +75,7 @@ public class UIManager : MonoBehaviour
                     {
                         HandCard.Instance.EnforceRandomCard();
                         gameoverUI.SetActive(false);
+                        curtain.gameObject.SetActive(false);
                         BattleSystem.Instance.SetupBattle();
                     });
                     break;
@@ -78,6 +84,7 @@ public class UIManager : MonoBehaviour
                     {
                         HandCard.Instance.DeleteRandomCard();
                         gameoverUI.SetActive(false);
+                        curtain.gameObject.SetActive(false);
                         BattleSystem.Instance.SetupBattle();
                     });
                     break;
@@ -100,7 +107,7 @@ public class UIManager : MonoBehaviour
                 case "QuitButton":
                     button.onClick.AddListener(() =>
                     {
-                        Application.Quit();
+                        GoToTitle();
                     });
                     break;
                 default:
@@ -117,6 +124,7 @@ public class UIManager : MonoBehaviour
 
     public void SetActiveGameoverUI(bool active, BattleState state)
     {
+        curtain.gameObject.SetActive(active);
         gameoverUI.SetActive(active);
         winUI.SetActive(false);
         loseUI.SetActive(false);
@@ -149,6 +157,7 @@ public class UIManager : MonoBehaviour
             }
         });
         cardListContainer.SetActive(active);
+        curtain.gameObject.SetActive(active);
     }
 
     public void SetActiveAllCardListUI()
@@ -167,6 +176,7 @@ public class UIManager : MonoBehaviour
             }
         });
         cardListContainer.SetActive(active);
+        curtain.gameObject.SetActive(active);
     }
 
     public void SetActiveUsedCardListUI()
@@ -185,10 +195,16 @@ public class UIManager : MonoBehaviour
             }
         });
         cardListContainer.SetActive(active);
+        curtain.gameObject.SetActive(active);
     }
 
     public void GameRestart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GoToTitle()
+    {
+        SceneManager.LoadScene("Title");
     }
 }

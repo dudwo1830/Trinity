@@ -15,5 +15,5 @@ LoseTitle,Lose
 LoseSub,You lose...
 RestartTitle,Restart?
 RestartSub,Start this game all over again
-QuitTitle,Quit
-QuitSub,Quit to desktop.
+QuitTitle,Exit
+QuitSub,Return to Title

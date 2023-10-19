@@ -43,7 +43,6 @@ public class LivingEntity : MonoBehaviour, IDamageable
         {
             damage = GetConditionById(1).ApplyValue(damage);
         }
-        Debug.Log($"최종 데미지: {damage}");
         var realDamage = Shield -= damage;
         UpdateShieldText();
 
@@ -53,6 +52,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         }
 
         Health -= -realDamage;
+        Health = Mathf.Clamp(Health, 0, startingHealth);
         if (Health <= 0 && !Dead)
         {
             Die();

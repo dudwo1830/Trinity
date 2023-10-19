@@ -48,7 +48,6 @@ public class EnemyTable : DataTable
                 {
                     record.useCardIdList.Add(int.Parse(item));
                 }
-                Debug.Log(record.ToString());
                 dic.Add(record.Name, record);
             }
         }

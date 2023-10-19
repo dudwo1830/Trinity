@@ -74,7 +74,6 @@ public class Enemy : LivingEntity
 
     public override void Die()
     {
-        Debug.Log("Enemy Die");
         base.Die();
     }
 

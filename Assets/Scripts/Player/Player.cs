@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections;
-using TMPro;
-using Unity.VisualScripting;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static System.Collections.Specialized.BitVector32;
-using static UnityEngine.GraphicsBuffer;
 
 public class Player : LivingEntity
 {
-    private Coroutine hitEffect;
-
     public Slider healthSlider;
 
     public AudioClip deathClip;
@@ -18,7 +11,6 @@ public class Player : LivingEntity
 
     public TextMeshProUGUI coastText;
     private Animator playerAnimator;
-    private AudioSource playerAudioSource;
 
     public int maxCoast { get; private set; } = 3;
     public int currentCoast { get; set; } = 0;
@@ -26,7 +18,6 @@ public class Player : LivingEntity
 
     private void Awake()
     {
-        playerAudioSource = GetComponent<AudioSource>();
         playerAnimator = GetComponent<Animator>();
         startingHealth = 80;
     }
@@ -39,10 +30,12 @@ public class Player : LivingEntity
         healthSlider.minValue = 0f;
         healthSlider.maxValue = startingHealth;
         UpdateSlider();
+
     }
 
     private void Update()
     {
+        playerAnimator.SetInteger("AnimState", 0);
     }
 
     public override void OnHealByValue(float heal)
@@ -58,24 +51,16 @@ public class Player : LivingEntity
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        //if (!Dead)
-        //{
-        //    playerAudioSource.PlayOneShot(hitClip);
-        //}
         base.OnDamage(damage, hitPoint, hitNormal);
-        if (hitEffect != null)
-        {
-            StopCoroutine(hitEffect);
-        }
-        //hitEffect = StartCoroutine(HitEffect(1f));
+
+        playerAnimator.SetTrigger("Hurt");
         UpdateSlider();
     }
 
     public override void Die()
     {
         base.Die();
-        //playerAudioSource.PlayOneShot(deathClip);
-        //playerAnimator.SetTrigger("Die");
+        playerAnimator.SetTrigger("Death");
     }
 
     public override void Revive(float heal = 50f)
@@ -83,23 +68,6 @@ public class Player : LivingEntity
         base.Revive(heal);
         UpdateSlider();
     }
-
-    //IEnumerator HitEffect(float duration)
-    //{
-    //    image.enabled = true;
-    //    float time = 0f;
-    //    image.color = startColor;
-    //    while (time < duration)
-    //    {
-    //        time += Time.deltaTime * 5f;
-    //        image.color = Color.Lerp(endColor, startColor, time / duration);
-    //        yield return null;
-    //    }
-    //    image.enabled = false;
-    //    image.color = startColor;
-
-    //    hitEffect = null;
-    //}
 
     public void RestartLevel()
     {
@@ -146,6 +114,7 @@ public class Player : LivingEntity
                 {
                     damage = GetConditionById(2).ApplyValue(damage);
                 }
+                playerAnimator.SetTrigger("Attack");
                 enemy.OnDamage(damage, Vector3.zero, Vector3.zero);
                 if (cardData.conditionInfo != null)
                 {

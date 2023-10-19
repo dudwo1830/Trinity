@@ -33,7 +33,6 @@ public static class DataTableManager
     public static void LoadAll()
     {
         //tables.Add(, new MyDataTable());
-        Debug.Log(tables);
         foreach (var item in tables)
         {
             item.Value.Load();

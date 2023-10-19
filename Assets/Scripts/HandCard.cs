@@ -70,8 +70,8 @@ public class HandCard : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            AddCard(cardTable.GetDataById(7));
-            //AddCard(cardTable.GetDataById(1));
+            //AddCard(cardTable.GetDataById(7));
+            AddCard(cardTable.GetDataById(1));
         }
         for (int i = 0; i < 4; i++)
         {
@@ -109,36 +109,35 @@ public class HandCard : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            AddCard(cardTable.GetDataById(1));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            AddCard(cardTable.GetDataById(2));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            AddCard(cardTable.GetDataById(7));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            GameObject.FindWithTag("Player").GetComponent<LivingEntity>().AddCondition(1,1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            GameObject.FindWithTag("Player").GetComponent<LivingEntity>().AddCondition(2,1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            BattleSystem.Instance.player.OnHealByRate(1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            TurnEnd();
-            ResetCard();
-        }
-
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    AddCard(cardTable.GetDataById(1));
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    AddCard(cardTable.GetDataById(2));
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    AddCard(cardTable.GetDataById(7));
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha4))
+        //{
+        //    GameObject.FindWithTag("Player").GetComponent<LivingEntity>().AddCondition(1,1);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha5))
+        //{
+        //    GameObject.FindWithTag("Player").GetComponent<LivingEntity>().AddCondition(2,1);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha6))
+        //{
+        //    BattleSystem.Instance.player.OnHealByRate(1);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha7))
+        //{
+        //    TurnEnd();
+        //    ResetCard();
+        //}
     }
 
     private void AddCard(CardData data)
@@ -175,7 +174,6 @@ public class HandCard : MonoBehaviour
         foreach(var card in usedCardList)
         {
             waitCardList.Add(card);
-            Debug.Log(waitCardList.Count);
         }
         usedCardList.Clear();
         ResetUI();
@@ -248,21 +246,6 @@ public class HandCard : MonoBehaviour
 
     public void AddCardUI(CardData data)
     {
-        //var cardUI = Instantiate(CardUIPrefab, allCardUITransform);
-        //cardUI.cardData = data;
-        //cardUI.SetCardData(cardUI.cardData);
-        //cardUI.gameObject.SetActive(true);
-        //allCardListUI.Add(cardUI);
-        //cardUI = Instantiate(CardUIPrefab, waitCardUITransform);
-        //cardUI.cardData = data;
-        //cardUI.SetCardData(cardUI.cardData);
-        //cardUI.gameObject.SetActive(true);
-        //waitCardListUI.Add(cardUI);
-        //cardUI = Instantiate(CardUIPrefab, usedCardUITransform);
-        //cardUI.cardData = data;
-        //cardUI.SetCardData(cardUI.cardData);
-        //cardUI.gameObject.SetActive(true);
-        //usedCardListUI.Add(cardUI);
         Transform[] targetTransforms = { allCardUITransform, waitCardUITransform, usedCardUITransform };
 
         foreach (Transform targetTransform in targetTransforms)
