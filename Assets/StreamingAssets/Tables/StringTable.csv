@@ -1,19 +1,19 @@
 ID,STRING
-WinTitle,승리
-WinSub,보상 선택
-NextBattleTitle,스킵
-NextBattleSub,보상을 받지 않고 다음 전투를 진행합니다
-AddCardTitle,카드 획득
-AddCardSub,랜덤한 카드를 1~2장 획득합니다
-OnHealTitle,회복
-OnHealSub,최대 체력의 30%만큼 회복합니다
-EnforceCardTitle,카드 강화
-EnforceCardSub,랜덤한 카드 1장을 강화합니다
-DeleteCardTitle,카드 제거
-DeleteCardSub,랜덤한 카드 1장을 제거합니다
-LoseTitle,패배
-LoseSub,패배하였습니다
-RestartTitle,재시작
-RestartSub,게임을 처음부터 다시 시작합니다
-QuitTitle,게임 종료
-QuitSub,게임을 종료하고 바탕화면으로 나갑니다
+WinTitle,Win
+WinSub,Choose a result
+NextBattleTitle,Skip
+NextBattleSub,Skip a result and start next battle
+AddCardTitle,Add a Cards
+AddCardSub,Get one or two random cards
+OnHealTitle,Heal
+OnHealSub,Heal for 30% of your max HP.
+EnforceCardTitle,Enfoce a Card
+EnforceCardSub,Upgrade random 1 card of your card deck.
+DeleteCardTitle,Delete a Card
+DeleteCardSub,Delete random 1 card of your card deck.
+LoseTitle,Lose
+LoseSub,You lose...
+RestartTitle,Restart?
+RestartSub,Start this game all over again
+QuitTitle,Quit
+QuitSub,Quit to desktop.

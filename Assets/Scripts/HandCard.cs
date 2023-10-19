@@ -68,19 +68,20 @@ public class HandCard : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 5; i++)
         {
-            AddCard(cardTable.GetDataByName("몽둥이질"));
-            //AddCard(cardTable.GetDataByName("타격"));
+            AddCard(cardTable.GetDataById(7));
+            //AddCard(cardTable.GetDataById(1));
         }
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    AddCard(cardTable.GetDataByName("수비"));
-        //}
-        //for (int i = 0; i < 1; i++)
-        //{
-        //    AddCard(cardTable.GetDataByName("강타"));
-        //}
+        for (int i = 0; i < 4; i++)
+        {
+            AddCard(cardTable.GetDataById(2));
+        }
+        for (int i = 0; i < 1; i++)
+        {
+            AddCard(cardTable.GetDataById(3));
+        }
+        Shuffle();
         BattleSystem.Instance.SetupBattle();
     }
 
@@ -110,15 +111,15 @@ public class HandCard : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            AddCard(cardTable.GetDataByName("타격"));
+            AddCard(cardTable.GetDataById(1));
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            AddCard(cardTable.GetDataByName("수비"));
+            AddCard(cardTable.GetDataById(2));
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            AddCard(cardTable.GetDataByName("몽둥이질"));
+            AddCard(cardTable.GetDataById(7));
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
@@ -231,9 +232,9 @@ public class HandCard : MonoBehaviour
 
     private void UpdateCardCount()
     {
-        allCardCountText.text = $"모든 카드 / {allCardListUI.Count}";
-        waitCardCountText.text = $"남은 카드 / {waitCardList.Count}";
-        usedCardCountText.text = $"사용한 카드 / {usedCardList.Count}";
+        allCardCountText.text = $"{allCardListUI.Count}";
+        waitCardCountText.text = $"{waitCardList.Count}";
+        usedCardCountText.text = $"{usedCardList.Count}";
     }
 
     public void SortByID(ref List<CardUI> list)

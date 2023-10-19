@@ -1,8 +1,8 @@
 Id,ResourcePath,Name,Description,Amount,Type,MaxLevel,UpgradeAmount,Coast,Conditions,ConditionDurations,UpgradeConditionDuration,IsAllAble
-1,CardImage/Strike,타격,피해를 {{Amount}} 줍니다,6,Attack,1,3,1,,,,N
-2,CardImage/Defend,수비,<color=orange>방어도</color> 를 {{Amount}} 얻습니다,5,Skill,1,3,1,,,,N
-3,CardImage/Bash,강타,피해를 {{Amount}} 줍니다. <color=orange>취약</color>을 {{ConditionDuration1}} 부여합니다.,8,Attack,1,2,2,1,2,1,N
-4,CardImage/Clothesline,클로스라인,피해를 {{Amount}} 줍니다. <color=orange>약화</color> 를 {{ConditionDuration1}} 부여합니다.,12,Attack,1,2,2,2,2,1,N
-5,CardImage/Searing Blow,불태우는 일격,피해를 {{Amount}} 줍니다. <color=orange>강화</color> 횟수에 제한이 없습니다.,12,Attack,999,3,2,,,,N
-6,CardImage/Uppercut,어퍼컷,피해를 {{Amount}} 줍니다. <color=orange>약화</color> 를 {{ConditionDuration1}} 부여합니다. <color=orange>취약</color> 을 {{ConditionDuration2}} 부여합니다.,13,Attack,1,0,2,1|2,1|1,1,N
-7,CardImage/Bludgeon,몽둥이질,피해를 {{Amount}} 줍니다.,32,Attack,1,10,3,,,,N
+1,CardImage/Strike,Strike,Deal {{Amount}} damage.,6,Attack,1,3,1,,,,N
+2,CardImage/Defend,Defend,Gain {{Amount}} <color=orange>Block</color>.,5,Skill,1,3,1,,,,N
+3,CardImage/Bash,Bash,Deal {{Amount}} damage. Apply {{ConditionDuration1}} <color=orange>Vulnerable</color>.,8,Attack,1,2,2,1,2,1,N
+4,CardImage/Clothesline,Clothesline,Deal {{Amount}} damage. Apply {{ConditionDuration1}} <color=orange>Weak</color>.,12,Attack,1,2,2,2,2,1,N
+5,CardImage/Searing Blow,Searing Blow,Deal {{Amount}} damage. Can be <color=orange>Upgraded</color> any number of times.,12,Attack,999,3,2,,,,N
+6,CardImage/Uppercut,Uppercut,Deal {{Amount}} damage. Apply {{ConditionDuration1}} <color=orange>Weak</color>. Apply {{ConditionDuration1}} <color=orange>Vulnerable</color>.,13,Attack,1,0,2,1|2,1|1,1,N
+7,CardImage/Bludgeon,Bludgeon,Deal {{Amount}} damage.,32,Attack,1,10,3,,,,N
