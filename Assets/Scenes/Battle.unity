@@ -475,7 +475,7 @@ MonoBehaviour:
   - {fileID: 8180574851194023428, guid: 74d34b3168009144997d5816fbfb372d, type: 3}
   - {fileID: 8472320110870844814, guid: d74e1bfca45d3d24eba44f291a0525b1, type: 3}
   battleEnemyList: []
-  minEnemyCount: 1
+  minEnemyCount: 3
   maxEnemyCount: 3
 --- !u!4 &323351132
 Transform:
@@ -1093,7 +1093,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 7
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public enum BattleState
@@ -97,7 +98,11 @@ public class BattleSystem : MonoBehaviour
         var enemyCount = Random.Range(minEnemyCount, maxEnemyCount + 1);
         for (int i = 0; i < enemyCount; i++)
         {
-            var enemy = Instantiate(enemyPrefabs[Random.Range(0, enemyPrefabs.Count)], enemySpawnTarget);
+            var prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+            float x = 7f;
+            x += i * 2f;
+            var position = player.transform.position + new Vector3(x, prefab.transform.position.y, 0);
+            var enemy = Instantiate(prefab, position, Quaternion.identity);
             battleEnemyList.Add(enemy);
         }
 

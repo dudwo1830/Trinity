@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,6 @@ public class Player : LivingEntity
 
     public int maxCoast { get; private set; } = 3;
     public int currentCoast { get; set; } = 0;
-
 
     private void Awake()
     {
@@ -35,7 +35,7 @@ public class Player : LivingEntity
 
     private void Update()
     {
-        playerAnimator.SetInteger("AnimState", 0);
+        //playerAnimator.SetInteger("AnimState", 0);
     }
 
     public override void OnHealByValue(float heal)
@@ -51,16 +51,17 @@ public class Player : LivingEntity
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        base.OnDamage(damage, hitPoint, hitNormal);
-
         playerAnimator.SetTrigger("Hurt");
+        StartCoroutine(WaitForAnimation("Hurt"));
+        base.OnDamage(damage, hitPoint, hitNormal);
         UpdateSlider();
     }
 
     public override void Die()
     {
-        base.Die();
         playerAnimator.SetTrigger("Death");
+        StartCoroutine(WaitForAnimation("Death"));
+        base.Die();
     }
 
     public override void Revive(float heal = 50f)
@@ -115,6 +116,7 @@ public class Player : LivingEntity
                     damage = GetConditionById(2).ApplyValue(damage);
                 }
                 playerAnimator.SetTrigger("Attack");
+                StartCoroutine(WaitForAnimation("Base Layer.Attack"));
                 enemy.OnDamage(damage, Vector3.zero, Vector3.zero);
                 if (cardData.conditionInfo != null)
                 {
@@ -140,5 +142,13 @@ public class Player : LivingEntity
         currentCoast -= HandCard.Instance.selectedCard.cardData.Coast;
         UpdateCoastUI();
         return true;
+    }
+
+    IEnumerator WaitForAnimation(string name)
+    {
+        while (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName(name))
+        {
+            yield return null;
+        }
     }
 }

@@ -11,7 +11,7 @@ public class ButtonEvent : MonoBehaviour
     {
         startButton.onClick.AddListener(() =>
         {
-            SceneManager.LoadScene("Battle");
+            SceneManager.LoadScene("Tutorial");
         });
 
         endButton.onClick.AddListener(() =>

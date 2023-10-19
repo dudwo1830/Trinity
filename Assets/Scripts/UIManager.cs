@@ -203,6 +203,11 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void GoToTutorial()
+    {
+        SceneManager.LoadScene("Tutorial");
+    }
+
     public void GoToTitle()
     {
         SceneManager.LoadScene("Title");

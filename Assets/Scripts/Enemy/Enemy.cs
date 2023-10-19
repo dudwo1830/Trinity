@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -63,21 +64,23 @@ public class Enemy : LivingEntity
 
     private void Update()
     {
-        enemyAnimator.SetInteger("AnimState", 0);
+        //enemyAnimator.SetInteger("AnimState", 0);
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        base.OnDamage(damage, hitPoint, hitNormal);
         enemyAnimator.SetTrigger("Hurt");
+        StartCoroutine(WaitForAnimation("Hurt"));
+        base.OnDamage(damage, hitPoint, hitNormal);
         UpdateSlider();
     }
     
 
     public override void Die()
     {
+        enemyAnimator.SetTrigger("Death");
+        StartCoroutine(WaitForAnimation("Death"));
         base.Die();
-        enemyAnimator.SetTrigger("Hurt");
     }
 
     public void SetAction(CardData data)
@@ -105,8 +108,9 @@ public class Enemy : LivingEntity
                 {
                     damage = target.GetConditionById(2).ApplyValue(damage);
                 }
-                target.OnDamage(damage, Vector3.zero, Vector3.zero);
                 enemyAnimator.SetTrigger("Attack");
+                StartCoroutine(WaitForAnimation("Attack"));
+                target.OnDamage(damage, Vector3.zero, Vector3.zero);
                 if (action.conditionInfo != null)
                 {
                     foreach (var info in action.conditionInfo)
@@ -157,5 +161,13 @@ public class Enemy : LivingEntity
     {
         healthSlider.value = Health;
         healthSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{Health}/{startingHealth}";
+    }
+
+    IEnumerator WaitForAnimation(string name)
+    {
+        while (enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName(name))
+        {
+            yield return null;
+        }
     }
 }
