@@ -15,10 +15,12 @@ public class Enemy : LivingEntity
     private Animator enemyAnimator;
     private AudioSource enemyAudioSource;
 
-    public TextMeshProUGUI actionTextUI;
     private CardData action;
-    private Card newAction;
-    
+    public GameObject actionGuide;
+    public Sprite attackImage;
+    public Sprite skillImage;
+
+
     List<float> hpList = new List<float>()
     {
         20, 30, 40, 50
@@ -55,10 +57,6 @@ public class Enemy : LivingEntity
         onDeathEvent += () => {
             BattleSystem.Instance.battleEnemyList.Remove(this);
             Destroy(gameObject);
-            if (BattleSystem.Instance.battleEnemyList.Count <= 0)
-            {
-                BattleSystem.Instance.Win();
-            }
         };
     }
 
@@ -83,14 +81,14 @@ public class Enemy : LivingEntity
     public void SetAction(CardData data)
     {
         action = data;
-        SetActionText();
+        SetActionGuide();
     }
 
     public void SetAction()
     {
         var randomId = Random.Range(enemyData.useCardIdList.Min(), enemyData.useCardIdList.Max() + 1);
         action = DataTableManager.GetTable<CardTable>().GetDataById(randomId);
-        SetActionText();
+        SetActionGuide();
     }
 
     public void EnemyAction(LivingEntity target)
@@ -125,22 +123,30 @@ public class Enemy : LivingEntity
         }
     }
 
-    public void SetActionText()
+    public void SetActionGuide()
     {
         var actionText = action.Type switch
         {
-            CardData.CardType.Attack => $"공격/{action.Amount}",
-            CardData.CardType.Skill => "방어",
-            _ => ""
+            CardData.CardType.Attack => $"{action.Amount}",
+            _ => string.Empty
+        };
+        var actionSprite = action.Type switch
+        {
+            CardData.CardType.Attack => attackImage,
+            CardData.CardType.Skill => skillImage,
+            _ => null
         };
 
-        if (actionText == string.Empty || actionText == null)
+        
+        if (actionSprite == null)
         {
-            actionTextUI.text = string.Empty;
+            actionGuide.SetActive(false);
         }
         else
         {
-            actionTextUI.text = actionText;
+            actionGuide.GetComponent<Image>().sprite = actionSprite;
+            actionGuide.GetComponentInChildren<TextMeshProUGUI>().text = actionText;
+            actionGuide.SetActive(true);
         }
     }
 

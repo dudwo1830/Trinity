@@ -95,7 +95,7 @@ public class BattleSystem : MonoBehaviour
     public void SetupBattle()
     {
         Debug.Log("SetupBattle");
-        HandCard.Instance.ResetAllCard();
+        
         var enemyCount = Random.Range(minEnemyCount, maxEnemyCount + 1);
         for (int i = 0; i < enemyCount; i++)
         {
@@ -174,16 +174,7 @@ public class BattleSystem : MonoBehaviour
     public void Win()
     {
         state = BattleState.WIN;
-        HandCard.Instance.ResetAllCard();
         UIManager.Instance.SetActiveGameoverUI(true, state);
-    }
-
-    public void PlayerUpgrade()
-    {
-        if (state != BattleState.WIN)
-        {
-            return;
-        }
         BattleExit();
     }
 
@@ -200,6 +191,9 @@ public class BattleSystem : MonoBehaviour
         {
             Destroy(enemy.gameObject);
         }
+
+        HandCard.Instance.TurnEnd();
+        HandCard.Instance.ResetCard();
 
         Debug.Log("End Battle");
         state = BattleState.NONE;

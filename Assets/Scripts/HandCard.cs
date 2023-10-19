@@ -68,27 +68,24 @@ public class HandCard : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
         {
             AddCard(cardTable.GetDataByName("몽둥이질"));
             //AddCard(cardTable.GetDataByName("타격"));
         }
-        for (int i = 0; i < 4; i++)
-        {
-            AddCard(cardTable.GetDataByName("수비"));
-        }
-        for (int i = 0; i < 1; i++)
-        {
-            AddCard(cardTable.GetDataByName("강타"));
-        }
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    AddCard(cardTable.GetDataByName("수비"));
+        //}
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    AddCard(cardTable.GetDataByName("강타"));
+        //}
         BattleSystem.Instance.SetupBattle();
     }
 
     public void Ready()
     {
-        Debug.Log($"WaitCardCount: {waitCardList.Count}");
-        Debug.Log($"HandCardCount: {handCardList.Count}");
-        Debug.Log($"UsedCardCount: {usedCardList.Count}");
         for (int i = 0; i < drawCount; i++)
         {
             DrawCard();
@@ -137,8 +134,10 @@ public class HandCard : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            EnforceRandomCard();
+            TurnEnd();
+            ResetCard();
         }
+
     }
 
     private void AddCard(CardData data)
@@ -170,36 +169,16 @@ public class HandCard : MonoBehaviour
         UpdateCardCount();
     }
 
-    private void ResetCard()
+    public void ResetCard()
     {
         foreach(var card in usedCardList)
         {
             waitCardList.Add(card);
+            Debug.Log(waitCardList.Count);
         }
         usedCardList.Clear();
         ResetUI();
         Shuffle();
-        UpdateCardCount();
-    }
-
-    public void ResetAllCard()
-    {
-        foreach (var card in handCardList)
-        {
-            card.gameObject.SetActive(false);
-            usedCardList.Add(card);
-        }
-        handCardList.Clear();
-
-        foreach (var card in usedCardList)
-        {
-            waitCardList.Add(card);
-        }
-        usedCardList.Clear();
-
-        ResetUI();
-        Shuffle();
-
         UpdateCardCount();
     }
 
@@ -220,6 +199,10 @@ public class HandCard : MonoBehaviour
         UseCardUI();
         selectedCard = null;
         UpdateCardCount();
+        if (BattleSystem.Instance.battleEnemyList.Count <= 0)
+        {
+            BattleSystem.Instance.Win();
+        }
     }
     private void DeleteCard(int index)
     {
