@@ -20,6 +20,7 @@ public class Enemy : LivingEntity
     public Sprite attackImage;
     public Sprite skillImage;
 
+    public int enemyId;
 
     List<float> hpList = new List<float>()
     {
@@ -34,7 +35,7 @@ public class Enemy : LivingEntity
         enemyAudioSource = GetComponent<AudioSource>();
 
         //Setup(hpList[Random.Range(0, hpList.Count)]);
-        Setup(DataTableManager.GetTable<EnemyTable>().GetRandomData());
+        Setup(DataTableManager.GetTable<EnemyTable>().GetDataById(enemyId));
     }
 
     public void Setup(float health, float damage = 0, float speed = 0, float attackRate = 0)
@@ -62,12 +63,13 @@ public class Enemy : LivingEntity
 
     private void Update()
     {
-
+        enemyAnimator.SetInteger("AnimState", 0);
     }
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.OnDamage(damage, hitPoint, hitNormal);
+        enemyAnimator.SetTrigger("Hurt");
         UpdateSlider();
     }
     
@@ -75,6 +77,7 @@ public class Enemy : LivingEntity
     public override void Die()
     {
         base.Die();
+        enemyAnimator.SetTrigger("Hurt");
     }
 
     public void SetAction(CardData data)
@@ -103,6 +106,7 @@ public class Enemy : LivingEntity
                     damage = target.GetConditionById(2).ApplyValue(damage);
                 }
                 target.OnDamage(damage, Vector3.zero, Vector3.zero);
+                enemyAnimator.SetTrigger("Attack");
                 if (action.conditionInfo != null)
                 {
                     foreach (var info in action.conditionInfo)
