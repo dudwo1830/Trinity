@@ -28,8 +28,8 @@ public class GameoverText : MonoBehaviour
         win.Find("DeleteCardButton").Find("Sub").gameObject.GetComponent<TextMeshProUGUI>().text = stringTable.GetString("DeleteCardSub");
 
         var lose = transform.Find("Lose");
-        lose.Find("Title").Find("Title").gameObject.GetComponent<TextMeshProUGUI>().text = stringTable.GetString("WinTitle");
-        lose.Find("Title").Find("Sub").gameObject.GetComponent<TextMeshProUGUI>().text = stringTable.GetString("WinSub");
+        lose.Find("Title").Find("Title").gameObject.GetComponent<TextMeshProUGUI>().text = stringTable.GetString("LoseTitle");
+        lose.Find("Title").Find("Sub").gameObject.GetComponent<TextMeshProUGUI>().text = stringTable.GetString("LoseSub");
 
         lose.Find("RestartButton").Find("Title").gameObject.GetComponent<TextMeshProUGUI>().text = stringTable.GetString("RestartTitle");
         lose.Find("RestartButton").Find("Sub").gameObject.GetComponent<TextMeshProUGUI>().text = stringTable.GetString("RestartSub");
