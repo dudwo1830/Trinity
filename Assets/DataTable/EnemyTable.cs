@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class EnemyTable : DataTable
 {
-    private string path = @"Tables/EnemyTable.csv";
+    private string path = @"Tables/EnemyTable";
 
     protected Dictionary<string, EnemyData> dic = new Dictionary<string, EnemyData>();
 
@@ -24,7 +24,9 @@ public class EnemyTable : DataTable
         string fileText = string.Empty;
         try
         {
-            fileText = File.ReadAllText(filePath);
+            //fileText = File.ReadAllText(filePath);
+            var textAsset = Resources.Load<TextAsset>(path);
+            fileText = textAsset.text;
         }
         catch (Exception e)
         {

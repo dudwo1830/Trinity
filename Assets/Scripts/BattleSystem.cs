@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public enum BattleState
@@ -8,10 +7,9 @@ public enum BattleState
     NONE,
     START,
     CARD_DRAW,
-    ENEMYREADY,
-    PLAYERTURN,
-    ENEMYTURN,
-    END,
+    ENEMY_READY,
+    PLAYER_TURN,
+    ENEMY_TURN,
     WIN,
     LOSE,
 }
@@ -22,11 +20,15 @@ public class BattleSystem : MonoBehaviour
     public Player player;
     public Button turnEndButton;
 
-    public RectTransform enemySpawnTarget;
+    public Transform enemySpawnTarget;
     public List<Enemy> enemyPrefabs = new List<Enemy>();
     public List<Enemy> battleEnemyList = new List<Enemy>();
+
     public int minEnemyCount = 1;
     public int maxEnemyCount = 3;
+    public float enemyDistance = 2f;
+    public float playerPosition = -3f;
+    public float enemyPosition = 1.5f;
 
     public static BattleState state = BattleState.NONE;
 
@@ -50,24 +52,15 @@ public class BattleSystem : MonoBehaviour
         turnEndButton.gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-    }
-
     private void Update()
     {
-        if (state == BattleState.PLAYERTURN)
+        if (state == BattleState.PLAYER_TURN)
         {
             if (Input.GetMouseButtonDown(0) && HandCard.Instance.selectedCard != null)
             {
                 FindEnemy(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             }
         }
-
-        //if (Input.GetKeyDown(KeyCode.F1) && state == BattleState.NONE)
-        //{
-        //    SetupBattle();
-        //}
     }
 
     private void FindEnemy(Vector2 clickPosition)
@@ -99,52 +92,48 @@ public class BattleSystem : MonoBehaviour
         for (int i = 0; i < enemyCount; i++)
         {
             var prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
-            float x = 7f;
-            x += i * 2f;
-            var position = player.transform.position + new Vector3(x, prefab.transform.position.y, 0);
-            var enemy = Instantiate(prefab, position, Quaternion.identity);
+            var position = new Vector3(enemyPosition + i * enemyDistance, prefab.transform.position.y, 0);
+            var enemy = Instantiate(prefab, position, Quaternion.identity, enemySpawnTarget);
             battleEnemyList.Add(enemy);
         }
 
-        state = BattleState.CARD_DRAW;
-        Draw();
+        CardDraw();
     }
 
-    public void Draw()
+    public void CardDraw()
     {
+        state = BattleState.CARD_DRAW;
         HandCard.Instance.Ready();
         player.UpdateConditions();
-        state = BattleState.ENEMYREADY;
         EnemyReady();
     }
 
     public void EnemyReady()
     {
-        var cardTable = DataTableManager.GetTable<CardTable>();
+        state = BattleState.ENEMY_READY;
         foreach (var enemy in battleEnemyList)
         {
-            //enemy.SetAction(cardTable.GetRandomData());
             enemy.SetAction();
             enemy.UpdateConditions();
         }
-        state = BattleState.PLAYERTURN;
         PlayerTurn();
     }
 
     public void PlayerTurn()
     {
+        state = BattleState.PLAYER_TURN;
         player.ResetCoast();
         player.ResetShield();
         turnEndButton.gameObject.SetActive(true);
     }
     public void TurnEnd()
     {
-        if (state != BattleState.PLAYERTURN)
+        if (state != BattleState.PLAYER_TURN)
         {
             return;
         }
         HandCard.Instance.TurnEnd();
-        state = BattleState.ENEMYTURN;
+        state = BattleState.ENEMY_TURN;
         EnemyTurn();
     }
 
@@ -158,21 +147,14 @@ public class BattleSystem : MonoBehaviour
 
         if (player.Dead)
         {
-            state = BattleState.LOSE;
             Lose();
         }
         else
         {
-            state = BattleState.END;
-            End();
+            CardDraw();
         }
     }
 
-    public void End()
-    {
-        state = BattleState.CARD_DRAW;
-        Draw();
-    }
 
     public void Win()
     {

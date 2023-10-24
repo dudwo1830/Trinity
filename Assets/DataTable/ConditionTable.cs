@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class ConditionTable : DataTable
 {
-    private string path = @"Tables/ConditionTable.csv";
+    private string path = @"Tables/ConditionTable";
 
     protected Dictionary<string, ConditionData> dic = new Dictionary<string, ConditionData>();
 
@@ -25,7 +25,9 @@ public class ConditionTable : DataTable
         string fileText = string.Empty;
         try
         {
-            fileText = File.ReadAllText(filePath);
+            //fileText = File.ReadAllText(filePath);
+            var textAsset = Resources.Load<TextAsset>(path);
+            fileText = textAsset.text;
         }
         catch (Exception e)
         {

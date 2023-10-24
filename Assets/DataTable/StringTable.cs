@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class StringTable : DataTable
 {
-    private string path = "Tables/StringTable.csv";
+    private string path = @"Tables/StringTable";
     public class Data
     {
         public string ID { get; set; }
@@ -19,7 +19,7 @@ public class StringTable : DataTable
 
     public StringTable()
     {
-        filePath = Path.Combine(Application.streamingAssetsPath, path);
+        //filePath = Path.Combine(Application.streamingAssetsPath, path);
         Load();
     }
 
@@ -28,7 +28,9 @@ public class StringTable : DataTable
         string fileText = string.Empty;
         try
         {
-            fileText = File.ReadAllText(filePath);
+            //fileText = File.ReadAllText(filePath);
+            var textAsset = Resources.Load<TextAsset>(path);
+            fileText = textAsset.text;
         }
         catch (Exception e)
         {

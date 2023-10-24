@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class CardTable : DataTable
 {
-    private string path = @"Tables/CardTable.csv";
+    private string path = @"Tables/CardTable";
 
     protected Dictionary<string, CardData> dic = new Dictionary<string, CardData>();
 
@@ -25,7 +25,9 @@ public class CardTable : DataTable
         string fileText = string.Empty;
         try
         {
-            fileText = File.ReadAllText(filePath);
+            //fileText = File.ReadAllText(filePath);
+            var textAsset = Resources.Load<TextAsset>(path);
+            fileText = textAsset.text;
         }
         catch (Exception e)
         {

@@ -364,7 +364,8 @@ public class HandCard : MonoBehaviour
         }
         int limitCount = waitCardList.Count;
         int random = Random.Range(0, limitCount);
-        if (!waitCardList[random].LevelUp() && count < limitCount)
+        var card = waitCardList[random];
+        if (!card.LevelUp() && count < limitCount)
         {
             EnforceRandomCard(++count);
         }
@@ -374,7 +375,11 @@ public class HandCard : MonoBehaviour
         {
             foreach (var cardUI in list)
             {
-                cardUI.UpdateCardUI();
+                if (ReferenceEquals(cardUI.cardData, card.cardData))
+                {
+                    cardUI.UpdateCardUI();
+                    break;
+                }
             }
         }
     }
