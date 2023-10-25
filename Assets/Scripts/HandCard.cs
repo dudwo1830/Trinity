@@ -159,7 +159,6 @@ public class HandCard : MonoBehaviour
             ResetCard();
         }
 
-        //var randomIndex = UnityEngine.Random.Range(0, cardList.Count);
         var card = waitCardList[0];
         card.gameObject.SetActive(true);
         handCardList.Add(card);
@@ -345,14 +344,13 @@ public class HandCard : MonoBehaviour
     {
         int minDrawCount = 1, maxDrawCount = 2;
         int random;
-        var table = DataTableManager.GetTable<CardTable>();
-        var maxCardCount = table.ToList().Count;
         var addCount = Random.Range(minDrawCount, maxDrawCount + 1);
 
+        var maxCardCount = cardTable.ToList().Count;
         for (int i = 0; i < addCount; i++)
         {
             random = Random.Range(1, maxCardCount+1);
-            AddCard(table.GetDataById(random));
+            AddCard(cardTable.GetDataById(random));
         }
     }
 

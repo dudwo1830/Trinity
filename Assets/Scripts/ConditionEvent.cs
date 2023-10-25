@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -18,12 +16,17 @@ public class ConditionEvent : MonoBehaviour
         conditionInfo.GetComponentInChildren<TextMeshProUGUI>().text = data.Description;
     }
 
+    private void Update()
+    {
+    }
     private void OnMouseEnter()
     {
         conditionInfo.SetActive(true);
+        Debug.Log("OnMouseEnter");
     }
     private void OnMouseExit()
     {
         conditionInfo.SetActive(false);
+        Debug.Log("OnMouseExit");
     }
 }

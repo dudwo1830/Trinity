@@ -321,9 +321,25 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5569679653868622875, guid: a07b799bcf12dfb4a935aad03906edb8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5569679653868622875, guid: a07b799bcf12dfb4a935aad03906edb8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5569679653868622875, guid: a07b799bcf12dfb4a935aad03906edb8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1.3
+      objectReference: {fileID: 0}
     - target: {fileID: 5837937529846680867, guid: a07b799bcf12dfb4a935aad03906edb8, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6465425329325639770, guid: a07b799bcf12dfb4a935aad03906edb8, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
