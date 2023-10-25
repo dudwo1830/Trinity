@@ -93,6 +93,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conditionInfo: {fileID: 4439946668509146236}
   conditionId: 0
+  conditionGuide: {fileID: 3150626639230607075}
+  text: {fileID: 0}
 --- !u!61 &3308284309332048185
 BoxCollider2D:
   m_ObjectHideFlags: 0
