@@ -30,6 +30,7 @@ public class BattleSystem : MonoBehaviour
     public float playerPosition = -3f;
     public float enemyPosition = 1.5f;
 
+    public int battleCount = 0;
     public static BattleState state = BattleState.NONE;
 
     private void Awake()
@@ -88,6 +89,7 @@ public class BattleSystem : MonoBehaviour
 
     public void SetupBattle()
     {
+        ++battleCount;
         var enemyCount = Random.Range(minEnemyCount, maxEnemyCount + 1);
         for (int i = 0; i < enemyCount; i++)
         {
