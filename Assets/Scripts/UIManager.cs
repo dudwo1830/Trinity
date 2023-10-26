@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,8 +14,11 @@ public class UIManager : MonoBehaviour
 
     public Image curtain;
 
-    private GameObject winUI;
-    private GameObject loseUI;
+    public GameObject winUI;
+    public GameObject loseUI;
+
+    public GameObject conditionGuide;
+    private int currentConditionId;
 
     private void Awake()
     {
@@ -26,9 +30,6 @@ public class UIManager : MonoBehaviour
         {
             Destroy(Instance);
         }
-
-        winUI = GameObject.FindGameObjectWithTag("GameoverWin");
-        loseUI = GameObject.FindGameObjectWithTag("GameoverLose");
     }
 
     private void Start()
@@ -114,6 +115,7 @@ public class UIManager : MonoBehaviour
         gameoverUI.SetActive(false);
 
         cardListContainer.SetActive(false);
+        conditionGuide.SetActive(false);
     }
 
     public void SetActiveGameoverUI(bool active, BattleState state)
@@ -205,5 +207,23 @@ public class UIManager : MonoBehaviour
     public void GoToTitle()
     {
         SceneManager.LoadScene("Title");
+    }
+
+    public void SetConditionGuide(int conditionId)
+    {
+        if (currentConditionId == conditionId)
+        {
+            return;
+        }
+
+        currentConditionId = conditionId;
+        var conditionData = DataTableManager.GetTable<ConditionTable>().GetDataById(currentConditionId);
+        conditionGuide.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = conditionData.Name;
+        conditionGuide.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = conditionData.Description;
+    }
+
+    public void SetActiveConditionGuide(bool active)
+    {
+        conditionGuide.SetActive(active);
     }
 }
