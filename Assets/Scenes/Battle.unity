@@ -225,6 +225,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4021747287307757439, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021747287307757439, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021747287307757439, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021747287307757439, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021747287307757439, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842882758979464402, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842882758979464402, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842882758979464402, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842882758979464402, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842882758979464402, guid: b49fa641fbd81d74789dbb65f19a8467, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1378,7 +1418,7 @@ GameObject:
   - component: {fileID: 1087019869}
   - component: {fileID: 1087019871}
   - component: {fileID: 1087019870}
-  - component: {fileID: 1087019872}
+  - component: {fileID: 1087019873}
   m_Layer: 0
   m_Name: Curtain
   m_TagString: Untagged
@@ -1443,7 +1483,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1087019868}
   m_CullTransparentMesh: 1
---- !u!114 &1087019872
+--- !u!114 &1087019873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1452,7 +1492,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1087019868}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1853e2647e643174e8b426690de291de, type: 3}
+  m_Script: {fileID: 11500000, guid: 671e8af543738e246a517ee2e990e481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1137555084 stripped
@@ -2107,12 +2147,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameoverUI: {fileID: 679441524}
+  curtain: {fileID: 1087019873}
   cardListContainer: {fileID: 814332840}
   cardListUIs:
   - {fileID: 1524704363}
   - {fileID: 1841287690}
   - {fileID: 1137555084}
-  curtain: {fileID: 1087019870}
   winUI: {fileID: 181049231}
   loseUI: {fileID: 1542509746}
   conditionGuide: {fileID: 2065081345}

@@ -1,4 +1,7 @@
+using GooglePlayGames.BasicApi;
+using GooglePlayGames.BasicApi.Events;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,6 +58,11 @@ public class BattleSystem : MonoBehaviour
 
     private void Update()
     {
+        if (UIManager.Instance.isPause)
+        {
+            return;
+        }
+
         if (state == BattleState.PLAYER_TURN)
         {
             if (Input.GetMouseButtonDown(0) && HandCard.Instance.selectedCard != null)

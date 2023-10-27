@@ -8,17 +8,18 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
     public GameObject gameoverUI;
+    public Curtain curtain;
 
     public GameObject cardListContainer;
     public List<GameObject> cardListUIs;
-
-    public Image curtain;
 
     public GameObject winUI;
     public GameObject loseUI;
 
     public GameObject conditionGuide;
     private int currentConditionId;
+
+    public bool isPause = false;
 
     private void Awake()
     {
@@ -120,6 +121,7 @@ public class UIManager : MonoBehaviour
 
     public void SetActiveGameoverUI(bool active, BattleState state)
     {
+        SetPause(active);
         curtain.gameObject.SetActive(active);
         gameoverUI.SetActive(active);
         winUI.SetActive(false);
@@ -152,6 +154,7 @@ public class UIManager : MonoBehaviour
                 cardList.SetActive(false);
             }
         });
+        SetPause(active);
         cardListContainer.SetActive(active);
         curtain.gameObject.SetActive(active);
     }
@@ -171,6 +174,7 @@ public class UIManager : MonoBehaviour
                 cardList.SetActive(false);
             }
         });
+        SetPause(active);
         cardListContainer.SetActive(active);
         curtain.gameObject.SetActive(active);
     }
@@ -190,6 +194,7 @@ public class UIManager : MonoBehaviour
                 cardList.SetActive(false);
             }
         });
+        SetPause(active);
         cardListContainer.SetActive(active);
         curtain.gameObject.SetActive(active);
     }
@@ -224,6 +229,18 @@ public class UIManager : MonoBehaviour
 
     public void SetActiveConditionGuide(bool active)
     {
+        SetPause(active);
+        curtain.transform.SetSiblingIndex(conditionGuide.transform.GetSiblingIndex() - 1);
+        curtain.gameObject.SetActive(active);
         conditionGuide.SetActive(active);
+        if (!active)
+        {
+            curtain.ResetSibling();
+        }
+    }
+
+    public void SetPause(bool active)
+    {
+        isPause = active;
     }
 }
