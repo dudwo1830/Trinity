@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,9 @@ public class Player : LivingEntity
 
     public TextMeshProUGUI coastText;
     private Animator playerAnimator;
+
+    private List<LivingEntity> targetList = new List<LivingEntity>();
+    private CardData currentCardData;
 
     public int maxCoast { get; private set; } = 3;
     public int currentCoast { get; set; } = 0;
@@ -52,7 +56,6 @@ public class Player : LivingEntity
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         playerAnimator.SetTrigger("Hurt");
-        StartCoroutine(WaitForAnimation("Hurt"));
         base.OnDamage(damage, hitPoint, hitNormal);
         UpdateSlider();
     }
@@ -60,7 +63,6 @@ public class Player : LivingEntity
     public override void Die()
     {
         playerAnimator.SetTrigger("Death");
-        StartCoroutine(WaitForAnimation("Death"));
         base.Die();
     }
 
@@ -94,47 +96,36 @@ public class Player : LivingEntity
 
     public bool CanUseCard()
     {
-        return HandCard.Instance.selectedCard != null && currentCoast >= HandCard.Instance.selectedCard.cardData.Coast; 
+        return HandCard.Instance.selectedCard != null && currentCoast >= HandCard.Instance.selectedCard.cardData.Coast;
     }
 
     public bool ActiveCard(LivingEntity entity)
     {
+        targetList.Clear();
         var enemy = entity.GetComponentInParent<Enemy>();
-        var cardData = HandCard.Instance.selectedCard.cardData;
+        if (enemy != null)
+        {
+            targetList.Add(enemy);
+        }
+        currentCardData = HandCard.Instance.selectedCard.cardData;
         switch (HandCard.Instance.selectedCard.cardData.Type)
         {
             case CardData.CardType.None:
                 break;
             case CardData.CardType.Attack:
-                if (enemy == null)
+                if (targetList.Count <= 0)
                 {
                     return false;
                 }
-                var damage = cardData.Amount;
-                if (HasConditionById(2))
-                {
-                    damage = GetConditionById(2).ApplyValue(damage);
-                }
                 playerAnimator.SetTrigger("Attack");
-                StartCoroutine(WaitForAnimation("Base Layer.Attack"));
-                enemy.OnDamage(damage, Vector3.zero, Vector3.zero);
-                if (cardData.conditionInfo != null)
-                {
-                    foreach (var info in cardData.conditionInfo)
-                    {
-                        enemy.AddCondition(info.Key, info.Value);
-                    }
-                }
+                StartCoroutine(WaitForAnimation("Attack"));
                 break;
             case CardData.CardType.Skill:
                 if (!(entity is LivingEntity))
                 {
                     return false;
                 }
-                AddShield(cardData.Amount);
-                break;
-            case CardData.CardType.Heal:
-                OnHealByValue(cardData.Amount);
+                AddShield(currentCardData.Amount);
                 break;
             default:
                 break;
@@ -149,6 +140,27 @@ public class Player : LivingEntity
         while (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName(name))
         {
             yield return null;
+        }
+        Attack();
+    }
+
+    public void Attack()
+    {
+        var damage = currentCardData.Amount;
+        if (HasConditionById(2))
+        {
+            damage = GetConditionById(2).ApplyValue(damage);
+        }
+        foreach (var enemy in targetList)
+        {
+            enemy.OnDamage(damage, Vector3.zero, Vector3.zero);
+            if (currentCardData.conditionInfo != null)
+            {
+                foreach (var info in currentCardData.conditionInfo)
+                {
+                    enemy.AddCondition(info.Key, info.Value);
+                }
+            }
         }
     }
 }

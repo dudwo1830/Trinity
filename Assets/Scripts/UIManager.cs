@@ -230,6 +230,7 @@ public class UIManager : MonoBehaviour
     public void SetActiveConditionGuide(bool active)
     {
         SetPause(active);
+        Debug.Log("Current Sibling Index" + curtain.transform.GetSiblingIndex());
         curtain.transform.SetSiblingIndex(conditionGuide.transform.GetSiblingIndex() - 1);
         curtain.gameObject.SetActive(active);
         conditionGuide.SetActive(active);

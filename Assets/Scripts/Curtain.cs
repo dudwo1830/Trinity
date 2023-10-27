@@ -4,10 +4,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Curtain : MonoBehaviour, IPointerClickHandler
+public class Curtain : MonoBehaviour
 {
     private RectTransform rectTransform;
-    private int originalIndex;
+    public int originalIndex { get; private set; }
 
     private void Awake()
     {
@@ -26,18 +26,5 @@ public class Curtain : MonoBehaviour, IPointerClickHandler
     public void ResetSibling()
     {
         transform.SetSiblingIndex(originalIndex);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        Debug.Log("Curtain Clicked");
-        var nextSiblingIndex = transform.GetSiblingIndex() + 1;
-        var target = transform.parent.GetChild(nextSiblingIndex);
-        if (target != null)
-        {
-            return;
-        }
-        target.gameObject.SetActive(false);
-        gameObject.SetActive(false);
     }
 }

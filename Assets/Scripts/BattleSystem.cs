@@ -1,3 +1,4 @@
+using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.Events;
 using System.Collections.Generic;
@@ -69,6 +70,10 @@ public class BattleSystem : MonoBehaviour
             {
                 FindEnemy(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             }
+            else
+            {
+                
+            }
         }
     }
 
@@ -92,6 +97,7 @@ public class BattleSystem : MonoBehaviour
                     HandCard.Instance.UseCard(gameObject.GetComponent<LivingEntity>());
                 }
             }
+            HandCard.Instance.selectedCard = null;
         }
     }
 
@@ -106,7 +112,8 @@ public class BattleSystem : MonoBehaviour
             var enemy = Instantiate(prefab, position, Quaternion.identity, enemySpawnTarget);
             battleEnemyList.Add(enemy);
         }
-
+        PlayGamesPlatform.Instance.UnlockAchievement("CgkIzsSV3YIQEAIQAg");
+        PlayGamesPlatform.Instance.ShowAchievementsUI();
         CardDraw();
     }
 
