@@ -66,13 +66,9 @@ public class BattleSystem : MonoBehaviour
 
         if (state == BattleState.PLAYER_TURN)
         {
-            if (Input.GetMouseButtonDown(0) && HandCard.Instance.selectedCard != null)
+            if (HandCard.Instance.selectedCard != null && Input.GetMouseButtonDown(0))
             {
                 FindEnemy(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            }
-            else
-            {
-                
             }
         }
     }
@@ -103,6 +99,7 @@ public class BattleSystem : MonoBehaviour
 
     public void SetupBattle()
     {
+        UIManager.Instance.SetPause(false);
         ++battleCount;
         var enemyCount = Random.Range(minEnemyCount, maxEnemyCount + 1);
         for (int i = 0; i < enemyCount; i++)

@@ -30,10 +30,10 @@ public class LivingEntity : MonoBehaviour, IDamageable
     {
         Dead = false;
         Health = startingHealth;
-        var table = DataTableManager.GetTable<ConditionTable>().ToList();
-        foreach (var item in table)
+        var conditionTable = DataTableManager.GetTable<ConditionTable>().ToList();
+        foreach (var condition in conditionTable)
         {
-            conditions.Add(new ConditionData(item));
+            conditions.Add(new ConditionData(condition));
         }
     }
 

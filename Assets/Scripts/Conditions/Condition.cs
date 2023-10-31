@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public abstract class Condition : MonoBehaviour
 {
@@ -9,19 +10,8 @@ public abstract class Condition : MonoBehaviour
     public float Coeff { get; set; }
 
     public int duration = 0;
-    public bool IsActive { get; set; }
 
-    public abstract float FinalValue(float damage);
-
-    public float ApplyValue(float amount)
-    {
-        switch (Id) 
-        { 
-            case 1:
-                return amount + (amount * Coeff);
-            case 2:
-                return amount - (amount * Coeff);
-        }
-        return amount;
-    }
+    public abstract float ModifyAmount(float amount);
+    public abstract void Apply(Character character);
+    public abstract void Remove(Character character);
 }

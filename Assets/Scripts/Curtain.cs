@@ -11,16 +11,14 @@ public class Curtain : MonoBehaviour
 
     private void Awake()
     {
-        originalIndex = transform.GetSiblingIndex();
-    }
-
-    private void Start()
-    {
         rectTransform = GetComponent<RectTransform>();
-
+        originalIndex = transform.GetSiblingIndex();
         float x = Screen.width;
         float y = Screen.height;
+
+        Debug.Log($"X: {x}, Y: {y}");
         rectTransform.sizeDelta = new Vector2(x, y);
+
     }
 
     public void ResetSibling()
